@@ -1,0 +1,19 @@
+{
+  "name": "com.conductive.sdk",
+  "version": "1.0.1",
+  "displayName": "ConductiveUnitySDK",
+  "description": "ConductiveUnitySDK allows you to automatically capture usage and send events",
+  "unity": "2021.1",
+  "unityRelease": "0b5",
+  "keywords": [
+    "sdk",
+    "analytics",
+    "events",
+    "capture"
+  ],
+  "author": {
+    "name": "My Company",
+    "email": "hello@example.com",
+    "url": "https://www.conductive.ai"
+  }
+}
