@@ -67,7 +67,7 @@ public class ConductiveUnitySDK : MonoBehaviour {
     }
 
     public async Task ScreenView(string screenName, object properties = null) {
-        string payload = GeneratePayload("screen", "$screen", properties);
+        string payload = GeneratePayload(screenName, "$screen", properties);
         await SendEvent(payload);
     }
 
