@@ -5,6 +5,9 @@
   "description": "ConductiveUnitySDK allows you to automatically capture usage and send events",
   "unity": "2021.1",
   "unityRelease": "0b5",
+  "dependencies": {
+    "com.unity.nuget.newtonsoft-json": "3.2.1"
+  },
   "keywords": [
     "sdk",
     "analytics",
