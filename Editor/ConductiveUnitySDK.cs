@@ -8,7 +8,16 @@ using Newtonsoft.Json;
 
 public class ConductiveUnitySDK : MonoBehaviour {
 
-    public static ConductiveUnitySDK Instance { get; private set;}
+    private static ConductiveUnitySDK s_instance;
+    public static ConductiveUnitySDK Instance {
+        get {
+            if (s_instance == null) {
+                return new GameObject("ConductiveUnitySDK").AddComponent<ConductiveUnitySDK>();
+            } else {
+                return s_instance;
+            }
+        }
+    }
 
     [SerializeField] public string apiKey = null;
     private string _apiUrl = "https://frame.conductive.ai";
@@ -16,20 +25,36 @@ public class ConductiveUnitySDK : MonoBehaviour {
 
     private string _distinctId;
 
-    [SerializeField] private float _syncInterval = 60f; // Sync interval in seconds
+    private float _syncInterval = 60f; // Sync interval in seconds
     private List<string> _eventCache = new List<string>();
     private Dictionary<string, object> _userPropertiesCache = new Dictionary<string, object>();
 
     private bool _automaticUserIdentification = true;
 
     private void Awake() {
-        if (Instance == null) {
-            Instance = this;
-            DontDestroyOnLoad(gameObject);
-            _httpClient = new HttpClient();
-        } else {
+        if (s_instance != null) {
             Destroy(gameObject);
-        }        
+            return;
+        }
+
+        s_instance = this;
+        DontDestroyOnLoad(gameObject);
+
+        _httpClient = new HttpClient();
+
+    }
+
+    private void OnEnable() {
+        if (s_instance == null) {
+            s_instance = this;
+        }
+    }
+
+    private void OnDestroy() {
+        if (s_instance != this) {
+            return;
+        }
+        s_instance = null;
     }
 
     public void SetAutomaticUserIdentification(bool enabled) {
@@ -80,7 +105,6 @@ public class ConductiveUnitySDK : MonoBehaviour {
     }
 
     private async Task SendEvent(string payload) {
-        Debug.Log($"Sending event: {payload}");
         await PostEventAsync(payload);
     }
 
@@ -137,15 +161,13 @@ public class ConductiveUnitySDK : MonoBehaviour {
 
         // set generated distinct id for all events except alias
         if (eventType != "alias") {
-
+            
             // set new distinct_id if event is identify
             // otherwise use the generated distinct_id based on the device
             payload.Add("distinct_id", eventType == "identify" ? _distinctId: GenerateUserFingerprint());
         }        
         
         string jsonPayload = JsonConvert.SerializeObject(payload, Formatting.Indented);
-
-        Debug.Log($"Payload for {eventType}: {payload}");
         
         return jsonPayload;
     }
