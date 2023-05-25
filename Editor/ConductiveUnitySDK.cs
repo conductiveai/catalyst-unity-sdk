@@ -81,6 +81,12 @@ public class ConductiveUnitySDK : MonoBehaviour {
     public async Task Identify(string distinctId, object properties = null) {
         _distinctId = distinctId;
 
+        if (properties == null) {
+            properties = new Dictionary<string, object>();
+        }
+
+        properties["$set"] = new Dictionary<string, object>();
+
         string payload = GeneratePayload("identify", "$identify", properties);
         await SendEvent(payload);
     }
@@ -164,7 +170,7 @@ public class ConductiveUnitySDK : MonoBehaviour {
             // set new distinct_id if event is identify
             // otherwise use the generated distinct_id based on the device
             payload.Add("distinct_id", string.IsNullOrEmpty(apiKey) ? GenerateUserFingerprint() : _distinctId);
-        }        
+        }
         
         string jsonPayload = JsonConvert.SerializeObject(payload, Formatting.Indented);
         
