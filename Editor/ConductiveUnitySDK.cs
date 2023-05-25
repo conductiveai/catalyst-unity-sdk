@@ -41,7 +41,6 @@ public class ConductiveUnitySDK : MonoBehaviour {
         DontDestroyOnLoad(gameObject);
 
         _httpClient = new HttpClient();
-
     }
 
     private void OnEnable() {
@@ -164,7 +163,7 @@ public class ConductiveUnitySDK : MonoBehaviour {
             
             // set new distinct_id if event is identify
             // otherwise use the generated distinct_id based on the device
-            payload.Add("distinct_id", eventType == "identify" ? _distinctId: GenerateUserFingerprint());
+            payload.Add("distinct_id", string.IsNullOrEmpty(apiKey) ? GenerateUserFingerprint() : _distinctId);
         }        
         
         string jsonPayload = JsonConvert.SerializeObject(payload, Formatting.Indented);
