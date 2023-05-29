@@ -228,11 +228,15 @@ public class ConductiveUnitySDK : MonoBehaviour {
         }
     }
 
+    async void AsyncSyncCache() {
+        await SyncCacheWithApi();
+    }
+
     private void Update() {
         if(internetDisconnected && Application.internetReachability != NetworkReachability.NotReachable && _eventCache.Count > 0) {
             Debug.Log("Internet connection restored, syncing cached events");
             internetDisconnected = false;
-            SyncCacheWithApi();            
+            AsyncSyncCache();            
         }
     }
 }
