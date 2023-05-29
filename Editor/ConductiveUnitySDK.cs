@@ -65,6 +65,7 @@ public class ConductiveUnitySDK : MonoBehaviour {
             { "distinct_id", distinctId },
             { "alias", alias }
         });
+
         await SendEvent(payload);
     }
 
@@ -82,17 +83,11 @@ public class ConductiveUnitySDK : MonoBehaviour {
     public async Task Identify(string distinctId, object properties = null) {
         _distinctId = distinctId;
 
-        if (properties == null) {
-            properties = new Dictionary<string, object>();
-        }
-
-        properties["$set"] = new Dictionary<string, object>();
-
         string payload = GeneratePayload("identify", "$identify", properties);
-
+        
         if (Application.internetReachability == NetworkReachability.NotReachable) {
             Debug.Log("No internet connection. Caching event <Identify>");
-            _userPropertiesCache[userId] = payload;
+            _userPropertiesCache[distinctId] = payload;
         } else {
             await SendEvent(payload);
         }
@@ -100,6 +95,7 @@ public class ConductiveUnitySDK : MonoBehaviour {
 
     public async Task ScreenView(string screenName, object properties = null) {
         string payload = GeneratePayload(screenName, "$screen", properties);
+
         await SendEvent(payload);
     }
 
@@ -129,11 +125,6 @@ public class ConductiveUnitySDK : MonoBehaviour {
         } catch (Exception e) {
             Debug.Log($"API Exception: {e.Message}");
         }
-    }
-
-    // Custom event tracking
-    public async Task TrackCustomEvent(string eventName, object properties = null) {
-        await Capture(eventName, properties);
     }
 
     // Automatic event tracking
@@ -181,6 +172,7 @@ public class ConductiveUnitySDK : MonoBehaviour {
 
     public async Task UpdateUserProperties(object properties = null) {
         string userId = _automaticUserIdentification ? GenerateUserFingerprint() : null;
+        
         await Identify(userId, properties);
     }
 
