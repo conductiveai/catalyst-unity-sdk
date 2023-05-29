@@ -172,7 +172,7 @@ public class ConductiveUnitySDK : MonoBehaviour {
 
     public async Task UpdateUserProperties(object properties = null) {
         string userId = _automaticUserIdentification ? GenerateUserFingerprint() : null;
-        
+
         await Identify(userId, properties);
     }
 
@@ -189,12 +189,15 @@ public class ConductiveUnitySDK : MonoBehaviour {
     }
 
     private async Task SyncCacheWithApi() {
+        Debug.Log("Syncing cache with API");
         foreach (string payload in _eventCache) {
+            Debug.Log($"Syncing event with API <Capture>");
             await PostEventAsync(payload);
         }
         _eventCache.Clear();
 
         foreach (var userProperties in _userPropertiesCache.Values) {
+            Debug.Log($"Syncing user properties with API <Identify>");
             await PostEventAsync(userProperties.ToString());
         }
         _userPropertiesCache.Clear();
@@ -214,7 +217,8 @@ public class ConductiveUnitySDK : MonoBehaviour {
     private void Start() {
         if (string.IsNullOrEmpty(apiKey)) {
             Debug.LogWarning("The API key is not set in the ConductiveSDK. Please input the API key in the ConductiveSDK game object");
-        } else {
+        } else if (Application.internetReachability != NetworkReachability.NotReachable) {
+            // has internet connection
             AsyncStart();
         }
     }
