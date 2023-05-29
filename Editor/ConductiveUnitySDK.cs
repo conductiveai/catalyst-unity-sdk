@@ -70,12 +70,13 @@ public class ConductiveUnitySDK : MonoBehaviour {
 
     public async Task Capture(string eventName, object properties = null) {
         string payload = GeneratePayload(eventName, "$event", properties);
-        await SendEvent(payload);
-    }
 
-    private void CaptureCached(string eventName, object properties = null) {
-        string payload = GeneratePayload(eventName, "$event", properties);
-        _eventCache.Add(payload);
+        if (Application.internetReachability == NetworkReachability.NotReachable) {
+            Debug.Log("No internet connection. Caching event <Capture>");
+            _eventCache.Add(payload);
+        } else {
+            await SendEvent(payload);
+        }
     }
 
     public async Task Identify(string distinctId, object properties = null) {
@@ -88,12 +89,13 @@ public class ConductiveUnitySDK : MonoBehaviour {
         properties["$set"] = new Dictionary<string, object>();
 
         string payload = GeneratePayload("identify", "$identify", properties);
-        await SendEvent(payload);
-    }
 
-    public void IdentifyUserCached(string userId, object properties = null) {
-        string payload = GeneratePayload("identify", userId, properties);
-        _userPropertiesCache[userId] = payload;
+        if (Application.internetReachability == NetworkReachability.NotReachable) {
+            Debug.Log("No internet connection. Caching event <Identify>");
+            _userPropertiesCache[userId] = payload;
+        } else {
+            await SendEvent(payload);
+        }
     }
 
     public async Task ScreenView(string screenName, object properties = null) {
