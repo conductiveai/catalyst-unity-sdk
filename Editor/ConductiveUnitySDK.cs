@@ -23,7 +23,7 @@ public class ConductiveUnitySDK : MonoBehaviour {
     private string _apiUrl = "https://frame.conductive.ai";
     private HttpClient _httpClient;
 
-    private string _distinctId;
+    private string _distinctId = null;
 
     private float _syncInterval = 60f; // Sync interval in seconds
     private List<string> _eventCache = new List<string>();
@@ -91,8 +91,10 @@ public class ConductiveUnitySDK : MonoBehaviour {
         if (Application.internetReachability == NetworkReachability.NotReachable) {
             Debug.Log("No internet connection. Caching event <Identify>");
             _userPropertiesCache[distinctId] = payload;
+            internetDisconnected = true;
         } else {
             await SendEvent(payload);
+            internetDisconnected = false;
         }
     }
 
@@ -165,7 +167,7 @@ public class ConductiveUnitySDK : MonoBehaviour {
             
             // set new distinct_id if event is identify
             // otherwise use the generated distinct_id based on the device
-            payload.Add("distinct_id", string.IsNullOrEmpty(apiKey) ? GenerateUserFingerprint() : _distinctId);
+            payload.Add("distinct_id", string.IsNullOrEmpty(_distinctId) ? GenerateUserFingerprint() : _distinctId);
         }
         
         string jsonPayload = JsonConvert.SerializeObject(payload, Formatting.Indented);
@@ -196,15 +198,15 @@ public class ConductiveUnitySDK : MonoBehaviour {
             Debug.Log("Syncing cache with API");
             foreach (string payload in _eventCache) {
                 Debug.Log($"Syncing event with API <Capture>");
-                await PostEventAsync(payload);
+                await SendEvent(payload);
             }
             _eventCache.Clear();
 
             foreach (var userProperties in _userPropertiesCache.Values) {
                 Debug.Log($"Syncing user properties with API <Identify>");
-                await PostEventAsync(userProperties.ToString());
+                await SendEvent(userProperties.ToString());
             }
-            _userPropertiesCache.Clear();            
+            _userPropertiesCache.Clear();
         }
     }
 
@@ -233,7 +235,7 @@ public class ConductiveUnitySDK : MonoBehaviour {
     }
 
     private void Update() {
-        if(internetDisconnected && Application.internetReachability != NetworkReachability.NotReachable && _eventCache.Count > 0) {
+        if(internetDisconnected && Application.internetReachability != NetworkReachability.NotReachable && (_eventCache.Count > 0 || _userPropertiesCache.Count > 0)) {
             Debug.Log("Internet connection restored, syncing cached events");
             internetDisconnected = false;
             AsyncSyncCache();            
