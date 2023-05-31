@@ -10,6 +10,24 @@ Before we begin, make sure you have the following:
 - Internet connection
 - GitHub account
 
+## Events
+
+`Capture`
+
+- Capture an event. This is the most important and frequently used Frame function.
+
+`Alias`
+
+- Create an alias, which Frame will use to link two distinct_id going forward (not retroactively). Multiple aliases can map to the same original ID, but not vice-versa.
+
+`Identify`
+
+- Identify a user with a unique ID instead of a Frame randomly generated distinct_id. If the method is never called, then unique visitors will be identified by a UUID generated the first time they visit the site.
+
+`ScreenView`
+
+- This method to track when the user views a specific screen in your game. You can pass new properties.
+
 ## Installation
 
 1. In Unity, go to **Window > Package Manager**  
@@ -22,10 +40,13 @@ Before we begin, make sure you have the following:
     2. In the ➕ button, go to **Add package from disk**
     3. Select the zip file, that you download from GitHub.
     4. 🎉 Package installed
-4. In your scene add a **GameObject**
-5. Go to, **Add Component**, and search for **ConductiveUnitySDK**, and select it.
-6. Now fill the *Api Key* field, with your project api key.
-7. 🎉 Package integrated
+
+## Integrate SDK
+
+1. In your scene add a **GameObject**
+2. Go to, **Add Component**, and search for **ConductiveUnitySDK**, and select it.
+3. Now fill the *Api Key* field, with your project api key.
+4. 🎉 Package integrated
 
 ## Troubleshooting
 
