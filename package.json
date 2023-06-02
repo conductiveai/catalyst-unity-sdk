@@ -1,6 +1,6 @@
 {
   "name": "com.conductive.sdk",
-  "version": "1.0.1",
+  "version": "1.0.0",
   "displayName": "ConductiveUnitySDK",
   "description": "Conductive Unity SDK allows you to automatically capture usage and send events",
   "unity": "2021.1",

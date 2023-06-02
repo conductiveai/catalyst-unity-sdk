@@ -1,16 +1,10 @@
 # Conductive Unity SDK
 
+## Overview
+
 If you want to integrate **ConductiveUnitySDK** into your Unity game development project, this step-by-step guide will help you install the package into Unity.
 
-## Prerequisites
-
-Before we begin, make sure you have the following:
-
-- Unity 2018 or later installed on your computer
-- Internet connection
-- GitHub account
-
-## Events
+### Events
 
 `Capture`
 
@@ -28,6 +22,14 @@ Before we begin, make sure you have the following:
 
 - This method to track when the user views a specific screen in your game. You can pass new properties.
 
+## Requirements
+
+Before we begin, make sure you have the following:
+
+- Unity 2018 or later installed on your computer
+- Internet connection
+- GitHub account
+
 ## Installation
 
 1. In Unity, go to **Window > Package Manager**  
@@ -41,7 +43,7 @@ Before we begin, make sure you have the following:
     3. Select the zip file, that you download from GitHub.
     4. 🎉 Package installed
 
-## Integrate SDK
+## Integration
 
 1. In your scene add a **GameObject**
 2. Go to, **Add Component**, and search for **ConductiveUnitySDK**, and select it.

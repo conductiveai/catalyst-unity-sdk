@@ -1,8 +1,11 @@
-Changelog
----------
-<!--(CHANGELOG_TOP)-->
+# {ConductiveUnitySdk} Changelog
 
-**1.0.1**
-* added event tracking 
-* added user identification and properties
-* added data persistence
+All notable changes to this project will be documented in this file. It will follow semantic versioning and each sprint should be tagged with a release. Each developer is in charge of updating this doc before the release.
+
+## 1.0.0 - 2023-05-15
+
+### Added
+
+- Event tracking
+- User identification and properties
+- Data persistence
