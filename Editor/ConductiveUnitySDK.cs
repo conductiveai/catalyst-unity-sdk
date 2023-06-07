@@ -189,6 +189,7 @@ public class ConductiveUnitySDK : MonoBehaviour {
         properties["device_model"] = SystemInfo.deviceModel;
         properties["os_version"] = SystemInfo.operatingSystem;
         properties["screen_resolution"]= $"{Screen.width}x{Screen.height}";
+        properties["fp_uuid"] = GenerateUserFingerprint();
 
         return properties;
     }

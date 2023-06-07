@@ -36,19 +36,21 @@ Before we begin, make sure you have the following:
 2. Using the GitHub:
     1. In the ➕ button, go to **Add package from git URL**
     2. And paste <https://github.com/conductiveai/conductive-unity-sdk.git> and click **Add**
-    3. 🎉 Package installed
 3. Using the ZIP file:
     1. Go to <https://github.com/conductiveai/conductive-unity-sdk.git> and download zip
     2. In the ➕ button, go to **Add package from disk**
     3. Select the zip file, that you download from GitHub.
-    4. 🎉 Package installed
+
+- ![Step 1](./Assets/step1.png)
+- ![Step 2](./Assets/step2.png)
+- ![Step 3](./Assets/step2.png)
 
 ## Integration
 
 1. In your scene add a **GameObject**
+![Add Game Object](./Assets/add-game-object.png)
 2. Go to, **Add Component**, and search for **ConductiveUnitySDK**, and select it.
 3. Now fill the *Api Key* field, with your project api key.
-4. 🎉 Package integrated
 
 ## Troubleshooting
 
