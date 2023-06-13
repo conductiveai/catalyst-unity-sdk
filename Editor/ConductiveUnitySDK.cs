@@ -20,7 +20,7 @@ public class ConductiveUnitySDK : MonoBehaviour {
     }
 
     [SerializeField] public string apiKey = null;
-    private string _apiUrl = "https://frame.dev-conductive.ai";
+    private string _apiUrl = "https://frame.qa-conductive.ai";
     private HttpClient _httpClient;
 
     private string _distinctId = null;
