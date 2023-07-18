@@ -48,57 +48,90 @@ Before we begin, make sure you have the following:
 ## Integration in Unity
 
 1. In packages list, go to go to **Packages > ConductiveUnitySdk > Prefab**
-2. Drag ConductiveSDK prefab to scene
+2. Drag ConductiveSDK prefab to your project's loading scene or first scene
     1. ![Step 4](./.github/step4.png)
-3. Now fill the *Api Key* field, with your project api key.
+3. After filling the API_KEY field the sdk starts to capture events automatically
 
 ## Usage
 
 - **Capture**
-  - Capture an event. This is the most important and frequently used Frame function.
-  - Usage:
+  
+  Capture an event. This is the most important and frequently used Frame function.
 
-        ```csharp
-        ConductiveUnitySDK.Instance.Capture("ACTION", new Dictionary<string, object>{
-          { "param1", Param1 },
-          { "param2", Param2 },
-          { "param3", Param3 },
-          { "param4", Param4 }
-        });
-        ```
+    ```
+    ConductiveUnitySDK.Instance.Capture("ACTION", new Dictionary<string, object>{
+        { "param1", Param1 },
+        { "param2", Param2 },
+        { "param3", Param3 },
+        { "param4", Param4 }
+    });
+    ```
 
 - **Alias**
-  - Create an alias, which Frame will use to link two distinct_id going forward (not retroactively). Multiple aliases can map to the same original ID, but not vice-versa.
-  - Usage:
+  
+  Create an alias, which Frame will use to link two distinct_id going forward (not retroactively). Multiple aliases can map to the same original ID, but not vice-versa.
 
-        ```csharp
-        ConductiveUnitySDK.Instance.Alias("DISTINCT_ID", "ALIAS");
-        ```
+    ```
+    ConductiveUnitySDK.Instance.Alias("DISTINCT_ID", "ALIAS");
+    ```
 
 - **Identify**
-  - Identify a user with a unique ID instead of a Frame randomly generated distinct_id. If the method is never called, then unique visitors will be identified by a UUID generated the first time they visit the site.
-  - Usage:
 
-        ```csharp
-        ConductiveUnitySDK.Instance.Identify("DISTINCT_ID", new Dictionary<string, object>{
-          { "age", Age },
-          { "email": Email },
-          { "name": Name }
-        });
-        ```
+  Identify a user with a unique ID instead of a Frame randomly generated distinct_id. If the method is never called, then unique visitors will be identified by a UUID generated the first time they visit the site.
+
+    ```
+    ConductiveUnitySDK.Instance.Identify("DISTINCT_ID", new Dictionary<string, object>{
+        { "age", Age },
+        { "email": Email },
+        { "name": Name }
+    });
+    ```
 
 - **ScreenView**
-  - This method to track when the user views a specific screen in your game. You can pass new properties.
-  - Usage:
+  
+  This method to track when the user views a specific screen in your game. You can pass new properties.
 
-        ```csharp
-        ConductiveUnitySDK.Instance.ScreenView("SCREEN_NAME", new Dictionary<string, object>{
-          { "param1", Param1 },
-          { "param2", Param2 },
-          { "param3", Param3 },
-          { "param4", Param4 }
-        });
-        ```
+    ```
+    ConductiveUnitySDK.Instance.ScreenView("SCREEN_NAME", new Dictionary<string, object>{
+        { "param1", Param1 },
+        { "param2", Param2 },
+        { "param3", Param3 },
+        { "param4", Param4 }
+    });
+    ```
+
+## Usage
+
+To initialize the library, RPC URLs have to be provided as well as Carpet instance or rabbitMQ URL.
+
+```python
+from web3services import Web3Services
+from carpet import Carpet
+
+carpet = Carpet(...)
+
+w3s = Web3Services(
+    ws_endpoint="ws.hostname:50051",
+    cs_endpoint="cs.hostname:50051",
+    ts_endpoint="ts.hostname:50051",
+    ds_endpoint="ds.hostname:50051",
+    carpet=carpet
+)
+```
+
+or
+
+```python
+from web3services import Web3Services
+
+w3s = Web3Services(
+    ws_endpoint="ws.hostname:50051",
+    cs_endpoint="cs.hostname:50051",
+    ts_endpoint="ts.hostname:50051",
+    ds_endpoint="ds.hostname:50051",
+    rabbitmq_uri="amqp://guest:guest@localhost"
+)
+```
 
 ## Troubleshooting
 
