@@ -45,12 +45,60 @@ Before we begin, make sure you have the following:
 - ![Step 2](./.github/step2.png)
 - ![Step 3](./.github/step2.png)
 
-## Integration
+## Integration in Unity
 
-1. In your scene add a **GameObject**
-![Add Game Object](./.github/add-game-object.png)
-2. Go to, **Add Component**, and search for **ConductiveUnitySDK**, and select it.
+1. In packages list, go to go to **Packages > ConductiveUnitySdk > Prefab**
+2. Drag ConductiveSDK prefab to scene
+    1. ![Step 4](./.github/step4.png)
 3. Now fill the *Api Key* field, with your project api key.
+
+## Usage
+
+- **Capture**
+  - Capture an event. This is the most important and frequently used Frame function.
+  - Usage:
+
+        ```csharp
+        ConductiveUnitySDK.Instance.Capture("ACTION", new Dictionary<string, object>{
+          { "param1", Param1 },
+          { "param2", Param2 },
+          { "param3", Param3 },
+          { "param4", Param4 }
+        });
+        ```
+
+- **Alias**
+  - Create an alias, which Frame will use to link two distinct_id going forward (not retroactively). Multiple aliases can map to the same original ID, but not vice-versa.
+  - Usage:
+
+        ```csharp
+        ConductiveUnitySDK.Instance.Alias("DISTINCT_ID", "ALIAS");
+        ```
+
+- **Identify**
+  - Identify a user with a unique ID instead of a Frame randomly generated distinct_id. If the method is never called, then unique visitors will be identified by a UUID generated the first time they visit the site.
+  - Usage:
+
+        ```csharp
+        ConductiveUnitySDK.Instance.Identify("DISTINCT_ID", new Dictionary<string, object>{
+          { "age", Age },
+          { "email": Email },
+          { "name": Name }
+        });
+        ```
+
+- **ScreenView**
+  - This method to track when the user views a specific screen in your game. You can pass new properties.
+  - Usage:
+
+        ```csharp
+        ConductiveUnitySDK.Instance.ScreenView("SCREEN_NAME", new Dictionary<string, object>{
+          { "param1", Param1 },
+          { "param2", Param2 },
+          { "param3", Param3 },
+          { "param4", Param4 }
+        });
+        ```
 
 ## Troubleshooting
 
