@@ -4,24 +4,6 @@
 
 If you want to integrate **ConductiveUnitySDK** into your Unity game development project, this step-by-step guide will help you install the package into Unity.
 
-### Events
-
-`Capture`
-
-- Capture an event. This is the most important and frequently used Frame function.
-
-`Alias`
-
-- Create an alias, which Frame will use to link two distinct_id going forward (not retroactively). Multiple aliases can map to the same original ID, but not vice-versa.
-
-`Identify`
-
-- Identify a user with a unique ID instead of a Frame randomly generated distinct_id. If the method is never called, then unique visitors will be identified by a UUID generated the first time they visit the site.
-
-`ScreenView`
-
-- This method to track when the user views a specific screen in your game. You can pass new properties.
-
 ## Requirements
 
 Before we begin, make sure you have the following:
