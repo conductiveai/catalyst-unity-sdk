@@ -32,13 +32,13 @@ Before we begin, make sure you have the following:
 1. In packages list, go to go to **Packages > ConductiveUnitySdk > Prefab**
 2. Drag ConductiveSDK prefab to your project's loading scene or first scene
     1. ![Step 4](./.github/step4.png)
-3. After filling the API_KEY field the sdk starts to capture events automatically
+3. After filling the API_KEY field in the ConductiveSDK prefab, the Conductive SDK will capture user login events automatically. No additional code needed! Placing the prefab in the game's first loaded scene or Main Menu ensures user logins are captured when the game starts.
 
 ## Usage
 
 ### Capture
   
-Capture an event. This is the most important and frequently used Frame function.
+Capture an event. This Frame function allows you to capture additional events in the game. You do not need to use Capture to capture daily logins.
 
 ```c#
 ConductiveUnitySDK.Instance.Capture("ACTION", new Dictionary<string, object>{
