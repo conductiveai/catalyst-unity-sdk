@@ -1,4 +1,4 @@
-# {CatalystSDK} Changelog
+# {Catalyst SDK} Changelog
 
 All notable changes to this project will be documented in this file. It will follow semantic versioning and each sprint should be tagged with a release. Each developer is in charge of updating this doc before the release.
 

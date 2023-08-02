@@ -1,8 +1,8 @@
 {
   "name": "com.conductive.sdk",
   "version": "1.0.0",
-  "displayName": "CatalystSDK",
-  "description": "CatalystSDK allows you to automatically capture usage and send events",
+  "displayName": "Catalyst SDK",
+  "description": "Catalyst SDK gives game developers access to a rewards platform that boosts LTVs 🚀 More at https://catalytst.conductive.ai",
   "unity": "2021.1",
   "unityRelease": "0b5",
   "dependencies": {

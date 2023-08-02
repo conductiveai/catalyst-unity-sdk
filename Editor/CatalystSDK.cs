@@ -135,7 +135,7 @@ public class CatalystSDK : MonoBehaviour {
     // Automatic event tracking
     private async void OnApplicationFocus(bool focus) {
         if (string.IsNullOrEmpty(apiKey)) {
-            Debug.LogWarning("The API key is not set in the CatalystSDK. Please input the API key in the CatalystSDK game object");
+            Debug.LogWarning("The API key is not set in the Catalyst SDK. Please input the API key in the Catalyst SDK prefab.");
         } else if (focus) {
             await TrackSessionStart();
         } else {
@@ -224,7 +224,7 @@ public class CatalystSDK : MonoBehaviour {
 
     private void Start() {
         if (string.IsNullOrEmpty(apiKey)) {
-            Debug.LogWarning("The API key is not set in the CatalystSDK. Please input the API key in the CatalystSDK game object");
+            Debug.LogWarning("The API key is not set in the Catalyst SDK. Please input the API key in the Catalyst SDK prefab.");
         } else if (Application.internetReachability != NetworkReachability.NotReachable) {
             // has internet connection
             AsyncStart();
