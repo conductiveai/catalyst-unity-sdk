@@ -19,9 +19,9 @@ Before we begin, make sure you have the following:
     1. In the ➕ button, go to **Add package from git URL**
     2. And paste <https://github.com/conductiveai/conductive-unity-sdk.git> and click **Add**
 3. Using the ZIP file:
-    1. Go to <https://github.com/conductiveai/conductive-unity-sdk.git> and download zip
+    1. Go to <https://github.com/conductiveai/conductive-unity-sdk.git> and download zip and unzip it
     2. In the ➕ button, go to **Add package from disk**
-    3. Select the zip file, that you download from GitHub.
+    3. In the zip folder that you unzipped select the package.json file.
 
 - ![Step 1](./.github/step1.png)
 - ![Step 2](./.github/step2.png)
