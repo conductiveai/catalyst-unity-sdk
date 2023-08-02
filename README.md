@@ -25,6 +25,7 @@ Before we begin, make sure you have the following:
 
 - ![Step 1](./.github/step1.png)
 - ![Step 2](./.github/step2.png)
+- ![Step 3](./.github/step3.png)
 
 ## Integration in Unity
 
