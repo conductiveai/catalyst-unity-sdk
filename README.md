@@ -31,7 +31,6 @@ Before we begin, make sure you have the following:
 
 1. In packages list, go to go to **Packages > CatalystSDK > Prefab**
 2. Drag CatalystSDK prefab to your project's loading scene or first scene
-    1. ![Step 4](./.github/step4.png)
 3. After filling the API_KEY field in the CatalystSDK prefab, the SDK will capture user login events automatically. No additional code needed! Placing the prefab in the game's first loaded scene or Main Menu ensures user logins are captured when the game starts.
 
 ## Usage
