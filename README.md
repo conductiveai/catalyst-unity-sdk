@@ -1,8 +1,8 @@
-# CatalystSDK
+# Catalyst SDK
 
 ## Overview
 
-If you want to integrate **CatalystSDK** into your Unity game development project, this step-by-step guide will help you install the package into Unity.
+If you want to integrate **Catalyst SDK** into your Unity game development project, this step-by-step guide will help you install the package into Unity.
 
 ## Requirements
 
@@ -30,8 +30,8 @@ Before we begin, make sure you have the following:
 ## Integration in Unity
 
 1. In packages list, go to go to **Packages > CatalystSDK > Prefab**
-2. Drag CatalystSDK prefab to your project's loading scene or first scene
-3. After filling the API_KEY field in the CatalystSDK prefab, the SDK will capture user login events automatically. No additional code needed! Placing the prefab in the game's first loaded scene or Main Menu ensures user logins are captured when the game starts.
+2. Drag CatalystSDK.prefab to your project's loading scene or first scene
+3. After filling the API_KEY field in the CatalystSDK.prefab, the SDK will capture user login events automatically. No additional code needed! Placing the prefab in the game's first loaded scene or Main Menu ensures user logins are captured when the game starts.
 
 ## Usage
 
