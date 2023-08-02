@@ -1,8 +1,8 @@
-# Conductive Unity SDK
+# CatalystSDK
 
 ## Overview
 
-If you want to integrate **ConductiveUnitySDK** into your Unity game development project, this step-by-step guide will help you install the package into Unity.
+If you want to integrate **CatalystSDK** into your Unity game development project, this step-by-step guide will help you install the package into Unity.
 
 ## Requirements
 
@@ -25,23 +25,22 @@ Before we begin, make sure you have the following:
 
 - ![Step 1](./.github/step1.png)
 - ![Step 2](./.github/step2.png)
-- ![Step 3](./.github/step2.png)
 
 ## Integration in Unity
 
-1. In packages list, go to go to **Packages > ConductiveUnitySdk > Prefab**
-2. Drag ConductiveSDK prefab to your project's loading scene or first scene
+1. In packages list, go to go to **Packages > CatalystSDK > Prefab**
+2. Drag CatalystSDK prefab to your project's loading scene or first scene
     1. ![Step 4](./.github/step4.png)
-3. After filling the API_KEY field in the ConductiveSDK prefab, the Conductive SDK will capture user login events automatically. No additional code needed! Placing the prefab in the game's first loaded scene or Main Menu ensures user logins are captured when the game starts.
+3. After filling the API_KEY field in the CatalystSDK prefab, the SDK will capture user login events automatically. No additional code needed! Placing the prefab in the game's first loaded scene or Main Menu ensures user logins are captured when the game starts.
 
 ## Usage
 
 ### Capture
   
-Capture an event. This Frame function allows you to capture additional events in the game. You do not need to use Capture to capture daily logins.
+Capture an event. This Catalyst function allows you to capture additional events in the game. You do not need to use Capture to capture daily logins.
 
 ```c#
-ConductiveUnitySDK.Instance.Capture("ACTION", new Dictionary<string, object>{
+CatalystSDK.Instance.Capture("ACTION", new Dictionary<string, object>{
     { "param1", Param1 },
     { "param2", Param2 },
     { "param3", Param3 },
@@ -51,18 +50,18 @@ ConductiveUnitySDK.Instance.Capture("ACTION", new Dictionary<string, object>{
 
 ### Alias
 
-Create an alias, which Frame will use to link two distinct_id going forward (not retroactively). Multiple aliases can map to the same original ID, but not vice-versa.
+Create an alias, which Catalyst will use to link two distinct_id going forward (not retroactively). Multiple aliases can map to the same original ID, but not vice-versa.
 
 ```c#
-ConductiveUnitySDK.Instance.Alias("DISTINCT_ID", "ALIAS");
+CatalystSDK.Instance.Alias("DISTINCT_ID", "ALIAS");
 ```
 
 ### Identify
 
-Identify a user with a unique ID instead of a Frame randomly generated distinct_id. If the method is never called, then unique visitors will be identified by a UUID generated the first time they visit the site.
+Identify a user with a unique ID instead of a Catalyst randomly generated distinct_id. If the method is never called, then unique visitors will be identified by a UUID generated the first time they visit the site.
 
 ```c#
-ConductiveUnitySDK.Instance.Identify("DISTINCT_ID", new Dictionary<string, object>{
+CatalystSDK.Instance.Identify("DISTINCT_ID", new Dictionary<string, object>{
     { "age", Age },
     { "email": Email },
     { "name": Name }
@@ -74,7 +73,7 @@ ConductiveUnitySDK.Instance.Identify("DISTINCT_ID", new Dictionary<string, objec
 This method to track when the user views a specific screen in your game. You can pass new properties.
 
 ```c#
-ConductiveUnitySDK.Instance.ScreenView("SCREEN_NAME", new Dictionary<string, object>{
+CatalystSDK.Instance.ScreenView("SCREEN_NAME", new Dictionary<string, object>{
     { "param1", Param1 },
     { "param2", Param2 },
     { "param3", Param3 },
@@ -84,30 +83,30 @@ ConductiveUnitySDK.Instance.ScreenView("SCREEN_NAME", new Dictionary<string, obj
 
 ### Manually capturing events
 
-Here's an example code snippet that shows how to use the ConductiveUnitySdk in your game code
+Here's an example code snippet that shows how to use the CatalystSDK in your game code
 
 ```c#
 public class GameClassSomething : MonoSingleton {
   private int Coin;
 
   public void Start() {
-    ConductiveUnitySDK.Instance.ScreenView("Game");
+    CatalystSDK.Instance.ScreenView("Game");
   }
 
   public void IncreaseCoin(int incCoin) {
     Coin += incCoin;
 
-    ConductiveUnitySDK.Instance.Capture("IncreaseCoin", new Dictionary<string, object>{{ "coins", Coin }});
+    CatalystSDK.Instance.Capture("IncreaseCoin", new Dictionary<string, object>{{ "coins", Coin }});
   }
 
   public void DecreaseCoin(int incCoin) {
     Coin -= incCoin;
 
-    ConductiveUnitySDK.Instance.Capture("DecreaseCoin", new Dictionary<string, object>{{ "coins", Coin }});
+    CatalystSDK.Instance.Capture("DecreaseCoin", new Dictionary<string, object>{{ "coins", Coin }});
   }
 
   public void Login(string email, int age, string name) {
-    ConductiveUnitySDK.Instance.Identify(email, new Dictionary<string, object>{
+    CatalystSDK.Instance.Identify(email, new Dictionary<string, object>{
       { "age", age },
       { "email": email },
       { "name": name }

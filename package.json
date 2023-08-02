@@ -1,8 +1,8 @@
 {
   "name": "com.conductive.sdk",
   "version": "1.0.0",
-  "displayName": "ConductiveUnitySDK",
-  "description": "Conductive Unity SDK allows you to automatically capture usage and send events",
+  "displayName": "CatalystSDK",
+  "description": "CatalystSDK allows you to automatically capture usage and send events",
   "unity": "2021.1",
   "unityRelease": "0b5",
   "dependencies": {

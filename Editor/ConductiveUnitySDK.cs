@@ -6,13 +6,13 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 
-public class ConductiveUnitySDK : MonoBehaviour {
+public class CatalystSDK : MonoBehaviour {
 
-    private static ConductiveUnitySDK s_instance;
-    public static ConductiveUnitySDK Instance {
+    private static CatalystSDK s_instance;
+    public static CatalystSDK Instance {
         get {
             if (s_instance == null) {
-                return new GameObject("ConductiveUnitySDK").AddComponent<ConductiveUnitySDK>();
+                return new GameObject("CatalystSDK").AddComponent<CatalystSDK>();
             } else {
                 return s_instance;
             }
@@ -135,7 +135,7 @@ public class ConductiveUnitySDK : MonoBehaviour {
     // Automatic event tracking
     private async void OnApplicationFocus(bool focus) {
         if (string.IsNullOrEmpty(apiKey)) {
-            Debug.LogWarning("The API key is not set in the ConductiveSDK. Please input the API key in the ConductiveSDK game object");
+            Debug.LogWarning("The API key is not set in the CatalystSDK. Please input the API key in the CatalystSDK game object");
         } else if (focus) {
             await TrackSessionStart();
         } else {
@@ -224,7 +224,7 @@ public class ConductiveUnitySDK : MonoBehaviour {
 
     private void Start() {
         if (string.IsNullOrEmpty(apiKey)) {
-            Debug.LogWarning("The API key is not set in the ConductiveSDK. Please input the API key in the ConductiveSDK game object");
+            Debug.LogWarning("The API key is not set in the CatalystSDK. Please input the API key in the CatalystSDK game object");
         } else if (Application.internetReachability != NetworkReachability.NotReachable) {
             // has internet connection
             AsyncStart();

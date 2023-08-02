@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 8824036702445028556}
   - component: {fileID: 9150115976148659469}
   m_Layer: 0
-  m_Name: ConductiveSDK
+  m_Name: CatalystSDK
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
