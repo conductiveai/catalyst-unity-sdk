@@ -17,9 +17,9 @@ Before we begin, make sure you have the following:
 1. In Unity, go to **Window > Package Manager**  
 2. Using the GitHub:
     1. In the ➕ button, go to **Add package from git URL**
-    2. And paste <https://github.com/conductiveai/conductive-unity-sdk.git> and click **Add**
+    2. And paste <https://github.com/conductiveai/catalyst-unity-sdk.git> and click **Add**
 3. Using the ZIP file:
-    1. Go to <https://github.com/conductiveai/conductive-unity-sdk.git> and download zip and unzip it
+    1. Go to <https://github.com/conductiveai/catalyst-unity-sdk.git> and download zip and unzip it
     2. In the ➕ button, go to **Add package from disk**
     3. In the zip folder that you unzipped select the package.json file.
 
