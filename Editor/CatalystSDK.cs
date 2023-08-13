@@ -109,7 +109,7 @@ public class CatalystSDK : MonoBehaviour {
 
         _externalId = externalId;
 
-        await Capture("Set ExternalId", new Dictionary<string, object>{
+        await Capture("Set External ID", new Dictionary<string, object>{
             { "external_id", externalId }
         });
     }
