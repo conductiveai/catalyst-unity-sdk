@@ -24,6 +24,7 @@ public class CatalystSDK : MonoBehaviour {
     private HttpClient _httpClient;
 
     private string _distinctId = null;
+    private string _externalId = null;
 
     private float _syncInterval = 60f; // Sync interval in seconds
     private List<string> _eventCache = new List<string>();
@@ -102,6 +103,15 @@ public class CatalystSDK : MonoBehaviour {
         string payload = GeneratePayload(screenName, "$screen", properties);
 
         await SendEvent(payload);
+    }
+
+    public async Task SetExternalId(string externalId) {
+
+        _externalId = externalId;
+
+        await Capture("Set External ID", new Dictionary<string, object>{
+            { "external_id", externalId }
+        });
     }
 
     public void OpenUrl(string url) {
@@ -191,6 +201,11 @@ public class CatalystSDK : MonoBehaviour {
         properties["screen_resolution"]= $"{Screen.width}x{Screen.height}";
         properties["fp_id"] = GenerateUserFingerprint();
 
+        // add external id if set
+        if (!string.IsNullOrEmpty(_externalId)) {
+            properties["external_id"] = _externalId;
+        }
+       
         return properties;
     }
 
