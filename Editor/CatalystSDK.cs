@@ -20,7 +20,7 @@ public class CatalystSDK : MonoBehaviour {
     }
 
     [SerializeField] public string apiKey = null;
-    private string _apiUrl = "https://frame.conductive.ai";
+    public string _apiUrl = "https://frame.conductive.ai";
     private HttpClient _httpClient;
 
     private string _distinctId = null;
