@@ -5,6 +5,7 @@ using UnityEngine;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using System.Text;
 
 public class CatalystSDK : MonoBehaviour {
 
@@ -20,11 +21,13 @@ public class CatalystSDK : MonoBehaviour {
     }
 
     [SerializeField] public string apiKey = null;
-    private string _apiUrl = "https://frame.conductive.ai";
+    public string _apiUrl = "https://frame.conductive.ai";
+    private string _catalystURL = "https://catalyst-web-client.vercel.app/contest/";
     private HttpClient _httpClient;
 
     private string _distinctId = null;
     private string _externalId = null;
+    private string _distinctHash = null;
 
     private float _syncInterval = 60f; // Sync interval in seconds
     private List<string> _eventCache = new List<string>();
@@ -116,6 +119,13 @@ public class CatalystSDK : MonoBehaviour {
 
     public void OpenUrl(string url) {
         Application.OpenURL(url);
+    }
+
+    public void OpenCatalyst()
+    {
+        Application.OpenURL(_catalystURL+_distinctHash);
+        Debug.Log("_distinctHash " + _distinctHash);
+        Debug.Log("_catalystURL " + _catalystURL);
     }
 
     public string GenerateUserFingerprint() {
@@ -244,10 +254,19 @@ public class CatalystSDK : MonoBehaviour {
             // has internet connection
             AsyncStart();
         }
+        _distinctHash = EncodeDistinctId(GenerateUserFingerprint());
     }
 
     async void AsyncSyncCache() {
         await SyncCacheWithApi();
+    }
+
+    private string EncodeDistinctId(string distinctId)
+    {
+        string encodeString =  "\"user_id:\\\"123\\\",unique_identifier:\\\"" + distinctId + "\\\"\"";
+        byte[] byteEncode = Encoding.UTF8.GetBytes(encodeString);
+        string encodedDistinctId = Convert.ToBase64String(byteEncode);
+        return encodedDistinctId;
     }
 
     private void Update() {
