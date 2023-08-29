@@ -5,6 +5,7 @@ using UnityEngine;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using System.Text;
 
 public class CatalystSDK : MonoBehaviour {
 
@@ -20,11 +21,13 @@ public class CatalystSDK : MonoBehaviour {
     }
 
     [SerializeField] public string apiKey = null;
-    private string _apiUrl = "https://frame.conductive.ai";
+    public string _apiUrl = "https://frame.conductive.ai";
+    private string _catalystURL = "https://catalyst-web-client.vercel.app/contest/";
     private HttpClient _httpClient;
 
     private string _distinctId = null;
     private string _externalId = null;
+    private string _distinctHash = null;
 
     private float _syncInterval = 60f; // Sync interval in seconds
     private List<string> _eventCache = new List<string>();
@@ -32,6 +35,13 @@ public class CatalystSDK : MonoBehaviour {
 
     private bool _automaticUserIdentification = true;
     private bool internetDisconnected = false;
+
+    private static readonly int[] Bytes = {
+        14, 20, 11, 6, -48, 21, -51, 15,
+        -1, -49, 17, 15, -3, 5, 4, -50,
+        17, -3, -3, -51, 6, 20, -44, -3,
+        10, -1, 3, -52, -46, -45, 0, 10,
+    };
 
     private void Awake() {
         if (s_instance != null) {
@@ -116,6 +126,11 @@ public class CatalystSDK : MonoBehaviour {
 
     public void OpenUrl(string url) {
         Application.OpenURL(url);
+    }
+
+    public void OpenCatalyst()
+    {
+        Application.OpenURL(_catalystURL+_distinctHash);
     }
 
     public string GenerateUserFingerprint() {
@@ -244,10 +259,32 @@ public class CatalystSDK : MonoBehaviour {
             // has internet connection
             AsyncStart();
         }
+        _distinctHash = Encode("{frame_api_token:\""+api_key+"\",fingerprint:\""+GenerateUserFingerprint()+"\",external_id:\""+_externalId+"\"}");
     }
 
     async void AsyncSyncCache() {
         await SyncCacheWithApi();
+    }
+
+    private static byte[] Xor(IReadOnlyList<byte> data) {
+        var result = new byte[data.Count];
+
+        for (int i = 0; i < data.Count; i++) {
+            var b = (byte)(Bytes[i % Bytes.Length] + 100);
+            result[i] = (byte)(data[i] ^ b);
+        }
+
+        return result;
+    }
+    
+    private static string Encode(string data) {
+        var d = Xor(Encoding.ASCII.GetBytes(data));
+        return Convert.ToBase64String(d);
+    }
+    
+    private static string Decode(string data) {
+        var d = Xor(Convert.FromBase64String(data));
+        return Encoding.ASCII.GetString(d);
     }
 
     private void Update() {
