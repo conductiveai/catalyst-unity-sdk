@@ -20,7 +20,7 @@ public class CatalystSDK : MonoBehaviour {
         }
     }
 
-    [SerializeField] public string apiKey = null;
+    [SerializeField] public string _apiKey = null;
     public string _apiUrl = "https://frame.conductive.ai";
     private string _catalystURL = "https://catalyst-web-client.vercel.app/contest/";
     private HttpClient _httpClient;
@@ -159,7 +159,7 @@ public class CatalystSDK : MonoBehaviour {
 
     // Automatic event tracking
     private async void OnApplicationFocus(bool focus) {
-        if (string.IsNullOrEmpty(apiKey)) {
+        if (string.IsNullOrEmpty(_apiKey)) {
             Debug.LogWarning("The API key is not set in the Catalyst SDK. Please input the API key in the Catalyst SDK prefab.");
         } else if (focus) {
             await TrackSessionStart();
@@ -182,7 +182,7 @@ public class CatalystSDK : MonoBehaviour {
 
     private string GeneratePayload(string eventType, string eventName, object properties) {
         var payload = new Dictionary<string, object>{
-            { "api_key", apiKey },
+            { "api_key", _apiKey },
             { "properties", AddPlatformSpecificProperties(properties as Dictionary<string, object>) },
             { "event", eventName }
         };
@@ -253,13 +253,14 @@ public class CatalystSDK : MonoBehaviour {
     }
 
     private void Start() {
-        if (string.IsNullOrEmpty(apiKey)) {
+        if (string.IsNullOrEmpty(_apiKey)) {
             Debug.LogWarning("The API key is not set in the Catalyst SDK. Please input the API key in the Catalyst SDK prefab.");
         } else if (Application.internetReachability != NetworkReachability.NotReachable) {
             // has internet connection
             AsyncStart();
+
+            _distinctHash = Encode("{frame_api_token:\"" + _apiKey + "\",fingerprint:\"" + GenerateUserFingerprint() + "\",external_id:\"" + _externalId + "\"}");
         }
-        _distinctHash = Encode("{frame_api_token:\""+api_key+"\",fingerprint:\""+GenerateUserFingerprint()+"\",external_id:\""+_externalId+"\"}");
     }
 
     async void AsyncSyncCache() {
