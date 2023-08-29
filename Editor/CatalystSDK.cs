@@ -36,6 +36,13 @@ public class CatalystSDK : MonoBehaviour {
     private bool _automaticUserIdentification = true;
     private bool internetDisconnected = false;
 
+    private static readonly int[] Bytes = {
+        14, 20, 11, 6, -48, 21, -51, 15,
+        -1, -49, 17, 15, -3, 5, 4, -50,
+        17, -3, -3, -51, 6, 20, -44, -3,
+        10, -1, 3, -52, -46, -45, 0, 10,
+    };
+
     private void Awake() {
         if (s_instance != null) {
             Destroy(gameObject);
@@ -124,8 +131,6 @@ public class CatalystSDK : MonoBehaviour {
     public void OpenCatalyst()
     {
         Application.OpenURL(_catalystURL+_distinctHash);
-        Debug.Log("_distinctHash " + _distinctHash);
-        Debug.Log("_catalystURL " + _catalystURL);
     }
 
     public string GenerateUserFingerprint() {
@@ -254,19 +259,32 @@ public class CatalystSDK : MonoBehaviour {
             // has internet connection
             AsyncStart();
         }
-        _distinctHash = EncodeDistinctId(GenerateUserFingerprint());
+        _distinctHash = Encode("{frame_api_token:\""+api_key+"\",fingerprint:\""+GenerateUserFingerprint()+"\",external_id:\""+_externalId+"\"}");
     }
 
     async void AsyncSyncCache() {
         await SyncCacheWithApi();
     }
 
-    private string EncodeDistinctId(string distinctId)
-    {
-        string encodeString =  "\"user_id:\\\"123\\\",unique_identifier:\\\"" + distinctId + "\\\"\"";
-        byte[] byteEncode = Encoding.UTF8.GetBytes(encodeString);
-        string encodedDistinctId = Convert.ToBase64String(byteEncode);
-        return encodedDistinctId;
+    private static byte[] Xor(IReadOnlyList<byte> data) {
+        var result = new byte[data.Count];
+
+        for (int i = 0; i < data.Count; i++) {
+            var b = (byte)(Bytes[i % Bytes.Length] + 100);
+            result[i] = (byte)(data[i] ^ b);
+        }
+
+        return result;
+    }
+    
+    private static string Encode(string data) {
+        var d = Xor(Encoding.ASCII.GetBytes(data));
+        return Convert.ToBase64String(d);
+    }
+    
+    private static string Decode(string data) {
+        var d = Xor(Convert.FromBase64String(data));
+        return Encoding.ASCII.GetString(d);
     }
 
     private void Update() {
