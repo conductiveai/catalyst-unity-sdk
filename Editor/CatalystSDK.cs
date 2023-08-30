@@ -132,10 +132,7 @@ public class CatalystSDK : MonoBehaviour {
     }
 
     public void OpenCatalyst() {
-        Debug.Log("OpenCatalyst");
         ShowWebview(_catalystURL+_distinctHash);
-        Debug.Log("_distinctHash " + _distinctHash);
-        Debug.Log("_catalystURL " + _catalystURL);
     }
 
     public string GenerateUserFingerprint() {
@@ -264,7 +261,7 @@ public class CatalystSDK : MonoBehaviour {
             // has internet connection
             AsyncStart();
 
-            _distinctHash = Encode("{frame_api_token:\"" + _apiKey + "\",fingerprint:\"" + GenerateUserFingerprint() + "\",external_id:\"" + _externalId + "\"}");
+            _distinctHash = Encode("{\"frame_api_token\":\"" + _apiKey + "\",\"fingerprint\":\"" + GenerateUserFingerprint() + "\",\"external_id\":\"" + _externalId + "\"}");
         }
     }
 
@@ -295,21 +292,26 @@ public class CatalystSDK : MonoBehaviour {
 
     private void InitializeWebview() {
         if (webview == null) {
-            Debug.Log("Initializing Webview");
             var webviewGO = new GameObject("webviewGO");
             webview = webviewGO.AddComponent<UniWebView>();
             webview.Frame = new Rect(0, 0, Screen.width, Screen.height);
             webview.ReferenceRectTransform = transform as RectTransform;
             
-            if (showToolbar)
+            if (showToolbar) {
                 webview.EmbeddedToolbar.Show();
+                webview.EmbeddedToolbar.HideNavigationButtons();
+                webview.EmbeddedToolbar.SetDoneButtonText("Close");
+                webview.EmbeddedToolbar.SetBackgroundColor(Color.white);
+                webview.EmbeddedToolbar.SetTitleText("Conductive.ai");
+            }
 
-            webview.OnPageFinished += (view, statusCode, url) => { Debug.Log("Page Load Finished: " + url); };
+            webview.OnPageFinished += (view, statusCode, url) => { 
+                Debug.Log("Page Load Finished: " + url); 
+            };
         }
     }
 
     public void ShowWebview(string url) {
-        Debug.Log("ShowWebview");
         if (webview != null) {
             webview.Show();
         } else {
