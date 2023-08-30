@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
@@ -24,6 +25,8 @@ public class CatalystSDK : MonoBehaviour {
     public string _apiUrl = "https://frame.conductive.ai";
     private string _catalystURL = "https://catalyst-web-client.vercel.app/contest/";
     private HttpClient _httpClient;
+    public bool showToolbar = true;
+    private UniWebView webview;
 
     private string _distinctId = null;
     private string _externalId = null;
@@ -128,9 +131,11 @@ public class CatalystSDK : MonoBehaviour {
         Application.OpenURL(url);
     }
 
-    public void OpenCatalyst()
-    {
-        Application.OpenURL(_catalystURL+_distinctHash);
+    public void OpenCatalyst() {
+        Debug.Log("OpenCatalyst");
+        ShowWebview(_catalystURL+_distinctHash);
+        Debug.Log("_distinctHash " + _distinctHash);
+        Debug.Log("_catalystURL " + _catalystURL);
     }
 
     public string GenerateUserFingerprint() {
@@ -225,7 +230,7 @@ public class CatalystSDK : MonoBehaviour {
     }
 
     private async Task SyncCacheWithApi() {
-        if(_eventCache.Count > 0 || _userPropertiesCache.Count > 0) {
+        if (_eventCache.Count > 0 || _userPropertiesCache.Count > 0) {
             Debug.Log("Syncing cache with API");
             foreach (string payload in _eventCache) {
                 Debug.Log($"Syncing event with API <Capture>");
@@ -288,8 +293,39 @@ public class CatalystSDK : MonoBehaviour {
         return Encoding.ASCII.GetString(d);
     }
 
+    private void InitializeWebview() {
+        if (webview == null) {
+            Debug.Log("Initializing Webview");
+            var webviewGO = new GameObject("webviewGO");
+            webview = webviewGO.AddComponent<UniWebView>();
+            webview.Frame = new Rect(0, 0, Screen.width, Screen.height);
+            webview.ReferenceRectTransform = transform as RectTransform;
+            
+            if (showToolbar)
+                webview.EmbeddedToolbar.Show();
+
+            webview.OnPageFinished += (view, statusCode, url) => { Debug.Log("Page Load Finished: " + url); };
+        }
+    }
+
+    public void ShowWebview(string url) {
+        Debug.Log("ShowWebview");
+        if (webview != null) {
+            webview.Show();
+        } else {
+            InitializeWebview();
+            webview.Load(url);
+        }
+    }
+
+    public void HideWebview() {
+        if (webview != null) {
+            webview.Hide();
+        }
+    }
+
     private void Update() {
-        if(internetDisconnected && Application.internetReachability != NetworkReachability.NotReachable && (_eventCache.Count > 0 || _userPropertiesCache.Count > 0)) {
+        if (internetDisconnected && Application.internetReachability != NetworkReachability.NotReachable && (_eventCache.Count > 0 || _userPropertiesCache.Count > 0)) {
             Debug.Log("Internet connection restored, syncing cached events");
             internetDisconnected = false;
             AsyncSyncCache();            
