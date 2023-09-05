@@ -22,14 +22,15 @@ public class CatalystSDK : MonoBehaviour {
     }
 
     [SerializeField] public string _apiKey = null;
-    public string _apiUrl = "https://frame.conductive.ai";
+    public string _apiUrl = "https://frame.qa-conductive.ai";
     private string _catalystURL = "https://catalyst-web-client.vercel.app/contest/";
     private HttpClient _httpClient;
     public bool showToolbar = true;
+    public CatalystAPIManager apiManager;
     private UniWebView webview;
 
     private string _distinctId = null;
-    private string _externalId = null;
+    public string _externalId = null;
     private string _distinctHash = null;
 
     private float _syncInterval = 60f; // Sync interval in seconds
@@ -56,6 +57,7 @@ public class CatalystSDK : MonoBehaviour {
         DontDestroyOnLoad(gameObject);
 
         _httpClient = new HttpClient();
+        SetExternalId("Test");
     }
 
     private void OnEnable() {
@@ -127,11 +129,8 @@ public class CatalystSDK : MonoBehaviour {
         });
     }
 
-    public void OpenUrl(string url) {
-        Application.OpenURL(url);
-    }
-
     public void OpenCatalyst() {
+        apiManager.PostRewardSeen();
         ShowWebview(_catalystURL+_distinctHash);
     }
 
@@ -260,9 +259,9 @@ public class CatalystSDK : MonoBehaviour {
         } else if (Application.internetReachability != NetworkReachability.NotReachable) {
             // has internet connection
             AsyncStart();
-
-            _distinctHash = Encode("{\"frame_api_token\":\"" + _apiKey + "\",\"fingerprint\":\"" + GenerateUserFingerprint() + "\",\"external_id\":\"" + _externalId + "\"}");
+            _distinctHash = Encode("{\"frame_api_token\":\"" + _apiKey + "\",\"fingerprint\":\"" + GenerateUserFingerprint() + "\",\"external_id\":\"" + _externalId + "\"}");            
         }
+        InitializeWebview();        
     }
 
     async void AsyncSyncCache() {
@@ -282,6 +281,7 @@ public class CatalystSDK : MonoBehaviour {
     
     private static string Encode(string data) {
         var d = Xor(Encoding.ASCII.GetBytes(data));
+        Debug.Log("Encode: " + Convert.ToBase64String(d));
         return Convert.ToBase64String(d);
     }
     
@@ -305,25 +305,37 @@ public class CatalystSDK : MonoBehaviour {
                 webview.EmbeddedToolbar.SetTitleText("Conductive.ai");
             }
 
+            Debug.Log("URL: " + _catalystURL+_distinctHash);
+            webview.Load(_catalystURL+_distinctHash);
             webview.OnPageFinished += (view, statusCode, url) => { 
                 Debug.Log("Page Load Finished: " + url); 
             };
+
+            webview.OnShouldClose += (view) => {
+                HideWebview();
+                return true;
+            };
+
         }
     }
 
     public void ShowWebview(string url) {
         if (webview != null) {
-            webview.Show();
+            webview.Show(true, UniWebViewTransitionEdge.Bottom, 0.35f);
         } else {
             InitializeWebview();
-            webview.Load(url);
+            webview.Show(true, UniWebViewTransitionEdge.Bottom, 0.35f);
         }
     }
 
     public void HideWebview() {
         if (webview != null) {
-            webview.Hide();
+            webview.Hide(true, UniWebViewTransitionEdge.Bottom, 0.35f);
         }
+    }
+
+    void CloseWebView() {
+        HideWebview();
     }
 
     private void Update() {
