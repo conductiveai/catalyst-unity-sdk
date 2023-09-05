@@ -81,6 +81,12 @@ CatalystSDK.Instance.ScreenView("SCREEN_NAME", new Dictionary<string, object>{
 });
 ```
 
+### Set external ID
+
+```c#
+CatalystSDK.Instance.SetExternalId("USER_ID_1");
+```
+
 ### Manually capturing events
 
 Here's an example code snippet that shows how to use the CatalystSDK in your game code
@@ -105,7 +111,9 @@ public class GameClassSomething : MonoSingleton {
     CatalystSDK.Instance.Capture("DecreaseCoin", new Dictionary<string, object>{{ "coins", Coin }});
   }
 
-  public void Login(string email, int age, string name) {
+  public void Login(string userId, string email, int age, string name) {
+    CatalystSDK.Instance.SetExternalId(userId);
+
     CatalystSDK.Instance.Identify(email, new Dictionary<string, object>{
       { "age", age },
       { "email": email },
