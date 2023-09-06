@@ -31,7 +31,7 @@ public class CatalystSDK : MonoBehaviour {
 
     private string _distinctId = null;
     public string _externalId = null;
-    private string _distinctHash = null;
+    public string _distinctHash = null;
 
     private float _syncInterval = 60f; // Sync interval in seconds
     private List<string> _eventCache = new List<string>();
@@ -57,7 +57,8 @@ public class CatalystSDK : MonoBehaviour {
         DontDestroyOnLoad(gameObject);
 
         _httpClient = new HttpClient();
-        SetExternalId("Test");
+        SetExternalId(GenerateUserFingerprint());
+        _distinctHash = Encode("{\"frame_api_token\":\"" + _apiKey + "\",\"fingerprint\":\"" + GenerateUserFingerprint() + "\",\"external_id\":\"" + _externalId + "\"}");
     }
 
     private void OnEnable() {
@@ -130,7 +131,8 @@ public class CatalystSDK : MonoBehaviour {
     }
 
     public void OpenCatalyst() {
-        apiManager.PostRewardSeen();
+        StartCoroutine(apiManager.PostRewardSeen());
+        apiManager.rewardBadge.SetActive(false);
         ShowWebview(_catalystURL+_distinctHash);
     }
 
@@ -258,8 +260,7 @@ public class CatalystSDK : MonoBehaviour {
             Debug.LogWarning("The API key is not set in the Catalyst SDK. Please input the API key in the Catalyst SDK prefab.");
         } else if (Application.internetReachability != NetworkReachability.NotReachable) {
             // has internet connection
-            AsyncStart();
-            _distinctHash = Encode("{\"frame_api_token\":\"" + _apiKey + "\",\"fingerprint\":\"" + GenerateUserFingerprint() + "\",\"external_id\":\"" + _externalId + "\"}");            
+            AsyncStart();            
         }
         InitializeWebview();        
     }
@@ -305,7 +306,6 @@ public class CatalystSDK : MonoBehaviour {
                 webview.EmbeddedToolbar.SetTitleText("Conductive.ai");
             }
 
-            Debug.Log("URL: " + _catalystURL+_distinctHash);
             webview.Load(_catalystURL+_distinctHash);
             webview.OnPageFinished += (view, statusCode, url) => { 
                 Debug.Log("Page Load Finished: " + url); 

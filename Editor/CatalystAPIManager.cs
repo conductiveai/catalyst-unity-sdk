@@ -7,8 +7,8 @@ using Newtonsoft.Json;
 
 public class CatalystAPIManager : MonoBehaviour
 {
-    private string _catalystApi = "https://instant-play.qa-conductive.ai/catalyst/webview/player/notification";
-    private string _catalystApiButtonUpdate = "https://instant-play.qa-conductive.ai/catalyst/webview/player/openWebView";
+    private string _catalystApi = "https://instant-play.qa-conductive.ai/catalyst/webview/player/notification/";
+    private string _catalystApiButtonUpdate = "https://instant-play.qa-conductive.ai/catalyst/webview/player/openWebView/";
     public CatalystApiData fetchedCatalystData { get; private set; }
     public GameObject countdownBadge;
     public Text countdownText;
@@ -23,13 +23,13 @@ public class CatalystAPIManager : MonoBehaviour
 
     void Start()
     {
-        if (!string.IsNullOrEmpty(catalystSDK._externalId))
+        if (!string.IsNullOrEmpty(catalystSDK._distinctHash))
         {
-            StartCoroutine(FetchData());            
+            StartCoroutine(FetchData());
         }
         else
         {
-            Debug.Log("SetExternalId needs to be run before the button is shown.");
+            Debug.Log("The _distinctHash needs to be generated before the button is shown.");
         }
     }
 
@@ -49,7 +49,7 @@ public class CatalystAPIManager : MonoBehaviour
 
         using (UnityWebRequest www = UnityWebRequest.Get(_catalystApi))
         {
-            www.SetRequestHeader("Authorization", catalystSDK._externalId);
+            www.SetRequestHeader("Authorization", catalystSDK._distinctHash);
             yield return www.SendWebRequest();
 
             if (www.result != UnityWebRequest.Result.Success)
@@ -66,14 +66,24 @@ public class CatalystAPIManager : MonoBehaviour
                     {
                         fetchedCatalystData = response.data;
                         
+                        Debug.Log(response.data.current_contest_ends_at);
+                        Debug.Log(response.data.next_contest_starts_at);
+                        Debug.Log(response.data.reward_token_logo);
+                        Debug.Log(response.data.reward_seen);
+
+
                         if (!string.IsNullOrEmpty(response.data.current_contest_ends_at))
                         {
                             Debug.Log($"Current Contest Ends At: {response.data.current_contest_ends_at}");
                             countdownBadge.SetActive(true);
                             countdownTimer = DateTime.Parse(response.data.current_contest_ends_at) - DateTime.UtcNow;
                         }
+                        else
+                        {
+                            Debug.LogWarning("The contest time IsNullOrEmpty");
+                        }
 
-                        if (response.data.reward_seen)
+                        if (!response.data.reward_seen)
                         {
                             Debug.Log($"Reward Seen: {response.data.reward_seen}");
                             rewardBadge.SetActive(true);
@@ -96,9 +106,9 @@ public class CatalystAPIManager : MonoBehaviour
 
     public IEnumerator PostRewardSeen()
     {
-        if (string.IsNullOrEmpty(catalystSDK._externalId))
+        if (string.IsNullOrEmpty(catalystSDK._distinctHash))
         {
-            Debug.LogWarning("The _externalId is null");
+            Debug.LogWarning("The _distinctHash is null");
             yield break;
         }
 
@@ -115,7 +125,7 @@ public class CatalystAPIManager : MonoBehaviour
 
         using (UnityWebRequest request = new UnityWebRequest(_catalystApiButtonUpdate, "POST"))
         {
-            request.SetRequestHeader("Authorization", catalystSDK._externalId);
+            request.SetRequestHeader("Authorization", catalystSDK._distinctHash);
             byte[] bodyRaw = System.Text.Encoding.UTF8.GetBytes(json);
             request.uploadHandler = new UploadHandlerRaw(bodyRaw);
             request.downloadHandler = new DownloadHandlerBuffer();
