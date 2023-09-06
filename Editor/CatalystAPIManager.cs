@@ -3,6 +3,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 using Newtonsoft.Json;
 
 public class CatalystAPIManager : MonoBehaviour
@@ -10,12 +11,14 @@ public class CatalystAPIManager : MonoBehaviour
     private string _catalystApi = "https://instant-play.qa-conductive.ai/catalyst/webview/player/notification/";
     private string _catalystApiButtonUpdate = "https://instant-play.qa-conductive.ai/catalyst/webview/player/openWebView/";
     public CatalystApiData fetchedCatalystData { get; private set; }
+    public GameObject catalystButton;
     public GameObject countdownBadge;
     public Text countdownText;
     public GameObject rewardBadge;
     public Image rewardImage;
     private TimeSpan countdownTimer;
     public CatalystSDK catalystSDK;
+    private string buttonScene;
 
     // ButtonPulse animation controls
     private float pulseScale = 1.2f; // the amount the badge grows, 20% scale increase
@@ -30,6 +33,21 @@ public class CatalystAPIManager : MonoBehaviour
         else
         {
             Debug.Log("The _distinctHash needs to be generated before the button is shown.");
+        }
+
+        buttonScene = SceneManager.GetActiveScene().name;
+        SceneManager.sceneLoaded += OnSceneLoaded;
+    }
+
+    private void OnSceneLoaded(Scene scene, LoadSceneMode sceneMode)
+    {
+        if (scene.name == buttonScene)
+        {
+            catalystButton.SetActive(true);
+        }
+        else
+        {
+            catalystButton.SetActive(false);   
         }
     }
 
