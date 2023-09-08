@@ -40,6 +40,8 @@ public class CatalystSDK : MonoBehaviour {
     private bool _automaticUserIdentification = true;
     private bool internetDisconnected = false;
 
+    public RectTransform WebviewCanvas;
+
     private static readonly int[] Bytes = {
         14, 20, 11, 6, -48, 21, -51, 15,
         -1, -49, 17, 15, -3, 5, 4, -50,
@@ -58,6 +60,7 @@ public class CatalystSDK : MonoBehaviour {
 
         _httpClient = new HttpClient();
         SetExternalId(GenerateUserFingerprint());
+
         _distinctHash = Encode("{\"frame_api_token\":\"" + _apiKey + "\",\"fingerprint\":\"" + GenerateUserFingerprint() + "\",\"external_id\":\"" + _externalId + "\"}");
     }
 
@@ -123,7 +126,7 @@ public class CatalystSDK : MonoBehaviour {
 
     public async Task SetExternalId(string externalId) {
 
-        _externalId = externalId;
+        _externalId = "abc";
 
         await Capture("Set External ID", new Dictionary<string, object>{
             { "external_id", externalId }
@@ -282,7 +285,6 @@ public class CatalystSDK : MonoBehaviour {
     
     private static string Encode(string data) {
         var d = Xor(Encoding.ASCII.GetBytes(data));
-        Debug.Log("Encode: " + Convert.ToBase64String(d));
         return Convert.ToBase64String(d);
     }
     
@@ -295,8 +297,7 @@ public class CatalystSDK : MonoBehaviour {
         if (webview == null) {
             var webviewGO = new GameObject("webviewGO");
             webview = webviewGO.AddComponent<UniWebView>();
-            webview.Frame = new Rect(0, 0, Screen.width, Screen.height);
-            webview.ReferenceRectTransform = transform as RectTransform;
+            webview.ReferenceRectTransform = WebviewCanvas;
             
             if (showToolbar) {
                 webview.EmbeddedToolbar.Show();
