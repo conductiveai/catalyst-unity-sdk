@@ -41,7 +41,7 @@ public class CatalystSDK : MonoBehaviour {
     private bool internetDisconnected = false;
 
     public RectTransform WebviewCanvas;
-
+    
     private static readonly int[] Bytes = {
         14,  20, 11,   6, -48,  21, -51,  15,
         -1, -49, 17,  15,  -3,   5,   4, -50,
@@ -60,7 +60,6 @@ public class CatalystSDK : MonoBehaviour {
 
         _httpClient = new HttpClient();
         SetExternalId(GenerateUserFingerprint());
-
         _distinctHash = Encode("{\"frame_api_token\":\"" + _apiKey + "\",\"fingerprint\":\"" + GenerateUserFingerprint() + "\",\"external_id\":\"" + _externalId + "\"}");
     }
 
@@ -136,7 +135,7 @@ public class CatalystSDK : MonoBehaviour {
     public void OpenCatalyst() {
         StartCoroutine(apiManager.PostRewardSeen());
         apiManager.rewardBadge.SetActive(false);
-        ShowWebview(_catalystURL+_distinctHash);
+        ShowWebview(_catalystURL+_distinctHash);        
     }
 
     public string GenerateUserFingerprint() {
@@ -265,7 +264,7 @@ public class CatalystSDK : MonoBehaviour {
             // has internet connection
             AsyncStart();            
         }
-        InitializeWebview();        
+        InitializeWebview();
     }
 
     async void AsyncSyncCache() {
@@ -311,6 +310,7 @@ public class CatalystSDK : MonoBehaviour {
                 HideWebview();
                 return true;
             };
+
         }
     }
 
