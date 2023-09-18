@@ -81,8 +81,7 @@ public class CatalystSDK : MonoBehaviour {
     }
 
     public async Task Alias(string distinctId, string alias) {
-        string payload = GeneratePayload("alias", "$create_alias", new Dictionary<string, object>{
-            { "distinct_id", distinctId },
+        string payload = GeneratePayload("$create_alias", "$create_alias", new Dictionary<string, object>{
             { "alias", alias }
         });
 
@@ -90,7 +89,7 @@ public class CatalystSDK : MonoBehaviour {
     }
 
     public async Task Capture(string eventName, object properties = null) {
-        string payload = GeneratePayload(eventName, "$event", properties);
+        string payload = GeneratePayload("$event", eventName, properties);
 
         if (Application.internetReachability == NetworkReachability.NotReachable) {
             Debug.Log("No internet connection. Caching event <Capture>");
@@ -105,7 +104,7 @@ public class CatalystSDK : MonoBehaviour {
     public async Task Identify(string distinctId, object properties = null) {
         _distinctId = distinctId;
 
-        string payload = GeneratePayload("identify", "$identify", properties);
+        string payload = GeneratePayload("$identify", "$identify", properties);
         
         if (Application.internetReachability == NetworkReachability.NotReachable) {
             Debug.Log("No internet connection. Caching event <Identify>");
@@ -118,16 +117,16 @@ public class CatalystSDK : MonoBehaviour {
     }
 
     public async Task ScreenView(string screenName, object properties = null) {
-        string payload = GeneratePayload(screenName, "$screen", properties);
+        string payload = GeneratePayload("$screen", screenName, properties);
 
         await SendEvent(payload);
     }
 
     public async Task SetExternalId(string externalId) {
 
-        _externalId = "abc";
+        _externalId = externalId;
 
-        await Capture("Set External ID", new Dictionary<string, object>{
+        await Capture("$set_external_id", new Dictionary<string, object>{
             { "external_id", externalId }
         });
     }
@@ -188,18 +187,11 @@ public class CatalystSDK : MonoBehaviour {
     private string GeneratePayload(string eventType, string eventName, object properties) {
         var payload = new Dictionary<string, object>{
             { "api_key", _apiKey },
+            { "distinct_id", string.IsNullOrEmpty(_distinctId) ? GenerateUserFingerprint() : _distinctId},
             { "properties", AddPlatformSpecificProperties(properties as Dictionary<string, object>) },
             { "event", eventName }
         };
 
-        // set generated distinct id for all events except alias
-        if (eventType != "alias") {
-            
-            // set new distinct_id if event is identify
-            // otherwise use the generated distinct_id based on the device
-            payload.Add("distinct_id", string.IsNullOrEmpty(_distinctId) ? GenerateUserFingerprint() : _distinctId);
-        }
-        
         string jsonPayload = JsonConvert.SerializeObject(payload, Formatting.Indented);
         
         return jsonPayload;
