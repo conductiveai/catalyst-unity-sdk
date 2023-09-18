@@ -126,7 +126,7 @@ public class CatalystSDK : MonoBehaviour {
 
         _externalId = externalId;
 
-        await Capture("Set External ID", new Dictionary<string, object>{
+        await Capture("$set_external_id", new Dictionary<string, object>{
             { "external_id", externalId }
         });
     }
