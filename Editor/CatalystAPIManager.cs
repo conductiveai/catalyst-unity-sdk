@@ -34,20 +34,26 @@ public class CatalystAPIManager : MonoBehaviour
         {
             Debug.Log("The _distinctHash needs to be generated before the button is shown.");
         }
-
-        buttonScene = SceneManager.GetActiveScene().name;
+        
         SceneManager.sceneLoaded += OnSceneLoaded;
     }
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode sceneMode)
     {
-        if (scene.name == buttonScene)
+        if (!string.IsNullOrEmpty(catalystSDK.sceneToShowButton))
         {
-            catalystButton.SetActive(true);
+            if (scene.name == catalystSDK.sceneToShowButton)
+            {
+                catalystButton.SetActive(true);
+            }
+            else
+            {
+                catalystButton.SetActive(false);   
+            }
         }
         else
         {
-            catalystButton.SetActive(false);   
+            Debug.LogWarning("Please input the name of the scene where you would like to show the button in the ConductiveSDK prefab.");
         }
     }
 
