@@ -139,7 +139,11 @@ public class CatalystSDK : MonoBehaviour {
     }
 
     public string GenerateUserFingerprint() {
+#if UNITY_IOS
+        return UnityEngine.iOS.Device.vendorIdentifier;
+#else
         return SystemInfo.deviceUniqueIdentifier;
+#endif
     }
 
     private async Task SendEvent(string payload) {
@@ -302,6 +306,12 @@ public class CatalystSDK : MonoBehaviour {
             webview.OnShouldClose += (view) => {
                 HideWebview();
                 return true;
+            };
+
+            webview.OnMessageReceived += (view, message) => {
+                if (message.Path.Equals("close")) {
+                    HideWebview();
+                }
             };
 
         }

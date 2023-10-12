@@ -233,15 +233,13 @@ public class CatalystAPIManager : MonoBehaviour
 
     void Update()
     {
-        if (countdownTimer != null & countdownText != null)
+        if (countdownTimer != null && countdownText != null)
         {
-            countdownTimer = countdownTimer.Subtract(TimeSpan.FromSeconds(Time.deltaTime));
-
-            countdownText.text = FormatTime(countdownTimer);
-            
-            if (countdownTimer.TotalSeconds <= 0)
+            if (countdownTimer.TotalSeconds > 0)
             {
-                //add notification later
+                countdownTimer = countdownTimer.Subtract(TimeSpan.FromSeconds(Time.deltaTime));
+
+                countdownText.text = FormatTime(countdownTimer);
             }
         }
     }
