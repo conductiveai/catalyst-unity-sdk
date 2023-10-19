@@ -10,6 +10,7 @@ using System.Text;
 
 public class CatalystSDK : MonoBehaviour {
 
+    const string CATALYSTID = "CatalystUserId";
     private static CatalystSDK s_instance;
     public static CatalystSDK Instance {
         get {
@@ -140,7 +141,18 @@ public class CatalystSDK : MonoBehaviour {
 
     public string GenerateUserFingerprint() {
 #if UNITY_IOS
-        return UnityEngine.iOS.Device.vendorIdentifier;
+        string keychainValue = KeyChain.BindGetKeyChainUser();
+
+        if (!string.IsNullOrEmpty(keychainValue)
+        {
+            return keychainValue;
+        }
+        else
+        {
+            string fingerprint = UnityEngine.iOS.Device.vendorIdentifier + DateTime.UtcNow.ToString("O");
+            KeyChain.BindSetKeyChainUser(fingerprint, fingerprint);
+            return fingerprint;
+        }
 #else
         return SystemInfo.deviceUniqueIdentifier;
 #endif
