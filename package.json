@@ -1,6 +1,6 @@
 {
   "name": "com.conductive.sdk",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "displayName": "Catalyst SDK",
   "description": "Catalyst SDK gives game developers access to a rewards platform that boosts LTVs 🚀 More at https://catalytst.conductive.ai",
   "unity": "2021.1",
