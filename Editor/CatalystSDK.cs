@@ -143,7 +143,7 @@ public class CatalystSDK : MonoBehaviour {
 #if UNITY_IOS
         string keychainValue = KeyChain.BindGetKeyChainUser();
 
-        if (!string.IsNullOrEmpty(keychainValue)
+        if (!string.IsNullOrEmpty(keychainValue))
         {
             return keychainValue;
         }
