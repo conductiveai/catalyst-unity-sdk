@@ -149,7 +149,7 @@ public class CatalystSDK : MonoBehaviour {
         }
         else
         {
-            string fingerprint = UnityEngine.iOS.Device.vendorIdentifier + DateTime.UtcNow.ToString("O");
+            string fingerprint = UnityEngine.iOS.Device.vendorIdentifier;
             KeyChain.BindSetKeyChainUser(fingerprint, fingerprint);
             return fingerprint;
         }
