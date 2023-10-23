@@ -97,8 +97,7 @@ public class CatalystAPIManager : MonoBehaviour
 
 
                         if (!string.IsNullOrEmpty(response.data.current_contest_ends_at))
-                        {
-                            Debug.Log($"Current Contest Ends At: {response.data.current_contest_ends_at}");
+                        {                            
                             countdownBadge.SetActive(true);
                             countdownTimer = DateTime.Parse(response.data.current_contest_ends_at) - DateTime.UtcNow;
                         }
@@ -108,8 +107,7 @@ public class CatalystAPIManager : MonoBehaviour
                         }
 
                         if (!response.data.reward_seen)
-                        {
-                            Debug.Log($"Reward Seen: {response.data.reward_seen}");
+                        {                            
                             rewardBadge.SetActive(true);
                             StartCoroutine(LoadRewardImage(response.data.reward_token_logo));
                             ButtonPulse(rewardBadge);
