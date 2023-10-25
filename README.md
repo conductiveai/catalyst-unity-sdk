@@ -4,6 +4,8 @@
 
 If you want to integrate **Catalyst SDK** into your Unity game development project, this step-by-step guide will help you install the package into Unity.
 
+You can follow our [docs](https://catalyst.conductive.ai/catalyst-unity-sdk/)
+
 ## Requirements
 
 Before we begin, make sure you have the following:
@@ -12,26 +14,59 @@ Before we begin, make sure you have the following:
 - Internet connection
 - GitHub account
 
-## Installation
+### API Key
 
-1. In Unity, go to **Window > Package Manager**  
-2. Using the GitHub:
-    1. In the ➕ button, go to **Add package from git URL**
-    2. And paste <https://github.com/conductiveai/catalyst-unity-sdk.git> and click **Add**
+You will first want to acquire an API key by visiting the dashboard <https://app.conductive.ai> and selecting the settings icon, followed by “Settings”
+
+![](.github/settings.png)
+
+This should take you to the project settings below. Copy your API key provided for your project.
+
+![](.github/settings2.png)
+
+### Installing the Unity SDK
+
+1. In Unity, go to **Window > Package Manager**. You can install the SDK using either the GitHub URL or the ZIP file.
+2. Using GitHub:
+    - Click the ➕ button, then go to **Add package from git URL**.
+    - Paste <https://github.com/conductiveai/catalyst-unity-sdk.git> and click **Add**.
 3. Using the ZIP file:
-    1. Go to <https://github.com/conductiveai/catalyst-unity-sdk.git> and download zip and unzip it
-    2. In the ➕ button, go to **Add package from disk**
-    3. In the zip folder that you unzipped select the package.json file.
+    - Go to [https://github.com/conductiveai/catalyst-unity-sdk](https://github.com/conductiveai/catalyst-unity-sdk.git) and [download the zip file](https://github.com/conductiveai/catalyst-unity-sdk/archive/refs/heads/main.zip)
+    - Unzip the file
+    - Click the ➕ button, then go to **Add package from disk**.
+    - Select the folder that you unzipped select the package.json file.
 
-- ![Step 1](./.github/step1.png)
-- ![Step 2](./.github/step2.png)
-- ![Step 3](./.github/step3.png)
+![](.github/step1.png)
 
-## Integration in Unity
+![](.github/step2.png)
 
-1. In packages list, go to go to **Packages > CatalystSDK > Prefab**
-2. Drag CatalystSDK.prefab to your project's loading scene or first scene
-3. After filling the API_KEY field in the CatalystSDK.prefab, the SDK will capture user login events automatically. No additional code needed! Placing the prefab in the game's first loaded scene or Main Menu ensures user logins are captured when the game starts.
+![](.github/step3.png)
+
+### Integration in Unity
+
+1. In the packages list, go to **Packages > CatalystSDK > Prefab**.
+
+2. Drag the *CatalystSDK.prefab* to your project's loading scene or first scene
+
+    ![](.github/add-game-object.png)
+
+3. Fill in the `API_KEY` field in the *CatalystSDK.prefab* using the API key you acquired earlier.
+
+4. Fill in the `SceneToShowButton` field in the *CatalystSDK.prefab* with the name of the Unity scene where you want the button to be shown. Pressing this button takes a user to the rewards interface where they can see contest information and their leaderboard rank.
+
+ ![](.github/unity-prefab.png)
+
+5. Configure the `Canvas` and `Canvas Scaler` on the *CatalystSDK.prefab* to fit your game's UI. The button and webview for the rewards interface is rendered on this Canvas.
+
+ ![](.github/unity-prefab-canvas.png)
+
+6. If you are creating leaderboard contests you will need to add a line of code when a player logs into your game to synchronize data with Catalyst services.
+
+```csharp
+CatalystSDK.Instance.SetExternalId("USER_ID_1");
+```
+
+Please refer to this page for more information: [Sending Events in Catalyst](https://catalyst.conductive.ai/sending-events-in-catalyst/)
 
 ## Usage
 
@@ -156,4 +191,12 @@ sudo arch -x86_64 gem install ffi
 - Be sure to disable bitcode
 - Be sure to remove Quoted Include in Framework Header to no
 
-[Changelog](CHANGELOG.md)
+### Building for specific platforms 📱
+
+iOS:
+
+- Please include `Security.Framework` to your project in Xcode before you build. This is requirement to use Keychain services. For more information please check [Apple's documentation](https://developer.apple.com/documentation/security)
+
+Android:
+
+- Uniwebiew includes Android libraries that may have a duplicate class with other Android plugins. If you see errors refering to a duplicate class please check [Uniwebview's documentation](https://docs.uniwebview.com/guide/trouble-shooting.html#android)
