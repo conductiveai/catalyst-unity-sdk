@@ -99,7 +99,7 @@ public class CatalystAPIManager : MonoBehaviour
                         if (!string.IsNullOrEmpty(response.data.current_contest_ends_at))
                         {                            
                             countdownBadge.SetActive(true);
-                            countdownTimer = DateTime.Parse(response.data.current_contest_ends_at) - DateTime.UtcNow;
+                            countdownTimer = DateTimeOffset.Parse(response.data.current_contest_ends_at) - DateTime.UtcNow;
                         }
                         else
                         {
