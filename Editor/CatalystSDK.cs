@@ -23,7 +23,7 @@ public class CatalystSDK : MonoBehaviour {
 
     [SerializeField] public string _apiKey = null;
     [SerializeField] public string sceneToShowButton = null;
-    private string _apiUrl = "https://frame.qa-conductive.ai";
+    private string _apiUrl = "https://frame.conductive.ai";
     private string _catalystURL = "https://catalyst-web-client.vercel.app/contest/";
     private HttpClient _httpClient;
     private bool showToolbar = true;
