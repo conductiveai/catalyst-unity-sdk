@@ -313,7 +313,7 @@ public class CatalystSDK : MonoBehaviour {
             
             if (showToolbar) {
                 webview.EmbeddedToolbar.Show();
-                webview.EmbeddedToolbar.HideNavigationButtons();
+                // webview.EmbeddedToolbar.HideNavigationButtons();
                 webview.EmbeddedToolbar.SetDoneButtonText("Close");
                 webview.EmbeddedToolbar.SetBackgroundColor(Color.white);
                 webview.EmbeddedToolbar.SetTitleText("Conductive.ai");
