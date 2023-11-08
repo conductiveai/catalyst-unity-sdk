@@ -60,7 +60,7 @@ public class CatalystSDK : MonoBehaviour {
         DontDestroyOnLoad(gameObject);
 
         _httpClient = new HttpClient();
-        SetExternalId(GenerateUserFingerprint());
+
         _distinctHash = Encode("{\"frame_api_token\":\"" + _apiKey + "\",\"fingerprint\":\"" + GenerateUserFingerprint() + "\",\"external_id\":\"" + _externalId + "\"}");
     }
 
