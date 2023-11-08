@@ -239,6 +239,10 @@ public class CatalystAPIManager : MonoBehaviour
 
                 countdownText.text = FormatTime(countdownTimer);
             }
+            else if (countdownTimer.TotalSeconds < 0)
+            {
+                countdownBadge.SetActive(false);
+            }
         }
     }
 }
