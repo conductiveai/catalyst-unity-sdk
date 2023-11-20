@@ -62,7 +62,7 @@ public class CatalystSDK : MonoBehaviour {
         _httpClient = new HttpClient();
         
         // Set your game's user id here to sync data with Catalyst Services
-        // SetExternalId(GenerateUserFingerprint());
+        // SetExternalId("USER_ID");
         
         _distinctHash = Encode("{\"frame_api_token\":\"" + _apiKey + "\",\"fingerprint\":\"" + GenerateUserFingerprint() + "\",\"external_id\":\"" + _externalId + "\"}");
     }
