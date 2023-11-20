@@ -60,10 +60,11 @@ This should take you to the project settings below. Copy your API key provided f
 
  ![](.github/unity-prefab-canvas.png)
 
-6. If you are creating leaderboard contests you will need to add a line of code when a player logs into your game to synchronize data with Catalyst services.
+6. Please open the `CatalystSDK.cs` script in the `CatalystSDK` folder. Then, edit this line of code to synchronize player IDs with Catalyst services.
 
 ```csharp
-CatalystSDK.Instance.SetExternalId("USER_ID_1");
+//Set your game's user id here to synchronize data with Catalyst services
+SetExternalId("USER_ID");
 ```
 
 Please refer to this page for more information: [Sending Events in Catalyst](https://catalyst.conductive.ai/sending-events-in-catalyst/)
@@ -116,12 +117,6 @@ CatalystSDK.Instance.ScreenView("SCREEN_NAME", new Dictionary<string, object>{
 });
 ```
 
-### Set external ID
-
-```c#
-CatalystSDK.Instance.SetExternalId("USER_ID_1");
-```
-
 ### Manually capturing events
 
 Here's an example code snippet that shows how to use the CatalystSDK in your game code
@@ -147,8 +142,6 @@ public class GameClassSomething : MonoSingleton {
   }
 
   public void Login(string userId, string email, int age, string name) {
-    CatalystSDK.Instance.SetExternalId(userId);
-
     CatalystSDK.Instance.Identify(email, new Dictionary<string, object>{
       { "age", age },
       { "email": email },
