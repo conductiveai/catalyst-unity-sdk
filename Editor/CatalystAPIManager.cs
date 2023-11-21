@@ -8,8 +8,9 @@ using Newtonsoft.Json;
 
 public class CatalystAPIManager : MonoBehaviour
 {
-    private string _catalystApi = "https://catalyst-api.conductive.ai/catalyst/webview/player/notification/";
-    private string _catalystApiButtonUpdate = "https://catalyst-api.conductive.ai/catalyst/webview/player/openWebView/";
+    private string _catalystApi = "https://analytics.qa-conductive.ai/catalyst/webview/player/notification/";
+    private string _catalystApiButtonUpdate = "https://analytics.qa-conductive.ai/catalyst/webview/player/openWebView/";
+
     public CatalystApiData fetchedCatalystData { get; private set; }
     public GameObject catalystButton;
     public GameObject countdownBadge;
