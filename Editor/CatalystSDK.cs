@@ -7,6 +7,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using System.Text;
+using UnityEngine.SceneManagement;
 
 public class CatalystSDK : MonoBehaviour {
 
@@ -65,12 +66,14 @@ public class CatalystSDK : MonoBehaviour {
         SetExternalId(GenerateUserFingerprint());
         
         _distinctHash = Encode("{\"frame_api_token\":\"" + _apiKey + "\",\"fingerprint\":\"" + GenerateUserFingerprint() + "\",\"external_id\":\"" + _externalId + "\"}");
+        Debug.Log("_distinctHash " + _distinctHash);
     }
 
     private void OnEnable() {
         if (s_instance == null) {
             s_instance = this;
         }
+        SceneManager.sceneLoaded += OnSceneLoaded;
     }
 
     private void OnDestroy() {
@@ -78,6 +81,7 @@ public class CatalystSDK : MonoBehaviour {
             return;
         }
         s_instance = null;
+        SceneManager.sceneLoaded -= OnSceneLoaded;
     }
 
     public void SetAutomaticUserIdentification(bool enabled) {
@@ -94,6 +98,19 @@ public class CatalystSDK : MonoBehaviour {
 
     public async Task Capture(string eventName, object properties = null) {
         string payload = GeneratePayload("$event", eventName, properties);
+
+        if (Application.internetReachability == NetworkReachability.NotReachable) {
+            Debug.Log("No internet connection. Caching event <Capture>");
+            _eventCache.Add(payload);
+            internetDisconnected = true;
+        } else {
+            await SendEvent(payload);
+            internetDisconnected = false;
+        }
+    }
+
+    public async Task Capture(string eventName, int num, object properties = null) {
+        string payload = GeneratePayload("$event", eventName, num, properties);
 
         if (Application.internetReachability == NetworkReachability.NotReachable) {
             Debug.Log("No internet connection. Caching event <Capture>");
@@ -139,6 +156,69 @@ public class CatalystSDK : MonoBehaviour {
         StartCoroutine(apiManager.PostRewardSeen());
         apiManager.rewardBadge.SetActive(false);
         ShowWebview(_catalystURL+_distinctHash);        
+    }
+
+    public async Task UserPurchase()
+    {
+        await Capture("$c_UserPurchase", new Dictionary<string, object>{
+            { "c_UserPurchase", DateTime.UtcNow }
+        });
+    }
+
+    public async Task AdView()
+    {
+        await Capture("$c_AdView", new Dictionary<string, object>{
+            { "c_AdView", DateTime.UtcNow }
+        });
+    }
+
+    public async Task LootboxOpen()
+    {
+        await Capture("$c_LootboxOpen", new Dictionary<string, object>{
+            { "c_LootboxOpen", DateTime.UtcNow }
+        });
+    }
+
+    public async Task CurrencySpend()
+    {
+        await Capture("$c_CurrencySpend", new Dictionary<string, object>{
+            { "c_CurrencySpend", DateTime.UtcNow }
+        });
+    }
+
+    public async Task PremiumCurrencySpend()
+    {
+        await Capture("$c_PremiumCurrencySpend", new Dictionary<string, object>{
+            { "c_PremiumCurrencySpend", DateTime.UtcNow }
+        });
+    }
+
+    public async Task AchievementComplete(string achievementName)
+    {
+        await Capture(achievementName, new Dictionary<string, object>{
+            { achievementName, DateTime.UtcNow }
+        });
+    }
+
+    public async Task EventComplete(string eventName)
+    {
+        await Capture(eventName, new Dictionary<string, object>{
+            { eventName, DateTime.UtcNow }
+        });
+    }
+
+    public async Task Level(int level)
+    {
+        await Capture("c_Level", new Dictionary<string, object>{
+            { "c_Level", level }
+        });
+    }
+
+    public async Task Score(int score)
+    {
+        await Capture("c_Score", new Dictionary<string, object>{
+            { "c_Score", score }
+        });
     }
 
     public string GenerateUserFingerprint() {
@@ -191,14 +271,32 @@ public class CatalystSDK : MonoBehaviour {
     }
 
     // Automatic event tracking
-    private async void OnApplicationFocus(bool focus) {
+    private void OnApplicationFocus(bool focus) {
+        Debug.Log("OnApplicationFocus " + focus);
         if (string.IsNullOrEmpty(_apiKey)) {
             Debug.LogWarning("The API key is not set in the Catalyst SDK. Please input the API key in the Catalyst SDK prefab.");
         } else if (focus) {
-            await TrackSessionStart();
+            TrackSessionStart();
         } else {
-            await TrackSessionEnd();
+            TrackSessionEnd();
         }
+    }
+
+    private void OnApplicationPause(bool pause) {
+        Debug.Log("OnApplicationPause " + pause);
+        if (string.IsNullOrEmpty(_apiKey)) {
+            Debug.LogWarning("The API key is not set in the Catalyst SDK. Please input the API key in the Catalyst SDK prefab.");
+        } else if (pause) {
+            TrackSessionEnd();
+        } else {
+            TrackSessionStart();            
+        }
+    }
+
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode) {
+        Capture("Scene Loaded", new Dictionary<string, object>{
+            { "scene_loaded ", scene.name }
+        });
     }
 
     private async Task TrackSessionStart() {
@@ -219,6 +317,20 @@ public class CatalystSDK : MonoBehaviour {
             { "distinct_id", string.IsNullOrEmpty(_distinctId) ? GenerateUserFingerprint() : _distinctId},
             { "properties", AddPlatformSpecificProperties(properties as Dictionary<string, object>) },
             { "event", eventName }
+        };
+
+        string jsonPayload = JsonConvert.SerializeObject(payload, Formatting.Indented);
+        
+        return jsonPayload;
+    }
+
+    private string GeneratePayload(string eventType, string eventName, int num, object properties) {
+        var payload = new Dictionary<string, object>{
+            { "api_key", _apiKey },
+            { "distinct_id", string.IsNullOrEmpty(_distinctId) ? GenerateUserFingerprint() : _distinctId},
+            { "properties", AddPlatformSpecificProperties(properties as Dictionary<string, object>) },
+            { "event", eventName },
+            { "value", num}
         };
 
         string jsonPayload = JsonConvert.SerializeObject(payload, Formatting.Indented);
