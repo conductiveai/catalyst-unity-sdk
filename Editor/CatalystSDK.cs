@@ -25,7 +25,7 @@ public class CatalystSDK : MonoBehaviour {
     [SerializeField] public string _apiKey = null;
     [SerializeField] public string sceneToShowButton = null;
     private string _apiUrl = "https://frame.conductive.ai";
-    private string _catalystURL = "https://catalyst-client.conductive.ai/contest/";
+    private string _catalystURL = "https://catalyst-web-client.vercel.app/contest/";
     private HttpClient _httpClient;
     private bool showToolbar = true;
     public CatalystAPIManager apiManager;
@@ -63,7 +63,7 @@ public class CatalystSDK : MonoBehaviour {
         _httpClient = new HttpClient();
         
         // Set your game's user id here to synchronize data with Catalyst services
-        // SetExternalId("USER_ID");
+        //SetExternalId(YOUR_USER_ID);
         
         _distinctHash = Encode("{\"frame_api_token\":\"" + _apiKey + "\",\"fingerprint\":\"" + GenerateUserFingerprint() + "\",\"external_id\":\"" + _externalId + "\"}");
         Debug.Log("_distinctHash " + _distinctHash);
@@ -97,6 +97,19 @@ public class CatalystSDK : MonoBehaviour {
     }
 
     public async Task Capture(string eventName, object properties = null) {
+        string payload = GeneratePayload("$event", eventName, properties);
+
+        if (Application.internetReachability == NetworkReachability.NotReachable) {
+            Debug.Log("No internet connection. Caching event <Capture>");
+            _eventCache.Add(payload);
+            internetDisconnected = true;
+        } else {
+            await SendEvent(payload);
+            internetDisconnected = false;
+        }
+    }
+
+    public async Task Capture(string eventName, Dictionary<string, object> properties) {
         string payload = GeneratePayload("$event", eventName, properties);
 
         if (Application.internetReachability == NetworkReachability.NotReachable) {
@@ -158,67 +171,63 @@ public class CatalystSDK : MonoBehaviour {
         ShowWebview(_catalystURL+_distinctHash);        
     }
 
-    public async Task UserPurchase()
+    public async Task UserPurchase(int userSpend, string itemPurchased = "default")
     {
-        await Capture("$c_UserPurchase", new Dictionary<string, object>{
-            { "c_UserPurchase", DateTime.UtcNow }
-        });
+        QuestEvent("$UserPurchaseEvent", userSpend, KeyValuePair.Create("itemPurchased", (object)itemPurchased));
     }
 
-    public async Task AdView()
+    public async Task AdView(string id)
     {
-        await Capture("$c_AdView", new Dictionary<string, object>{
-            { "c_AdView", DateTime.UtcNow }
-        });
+        QuestEvent("$AdViewEvent", null, KeyValuePair.Create("id", (object)id));
     }
 
-    public async Task LootboxOpen()
+    public async Task LootboxOpen(string lootboxType = "default", string reward = "default")
     {
-        await Capture("$c_LootboxOpen", new Dictionary<string, object>{
-            { "c_LootboxOpen", DateTime.UtcNow }
-        });
+        QuestEvent("$LootboxEvent", null, KeyValuePair.Create(lootboxType, (object)reward));
     }
 
-    public async Task CurrencySpend()
+    public async Task CurrencySpend(int amount, string currencyName = "default")
     {
-        await Capture("$c_CurrencySpend", new Dictionary<string, object>{
-            { "c_CurrencySpend", DateTime.UtcNow }
-        });
+        QuestEvent("$CurrencySpendEvent", amount, KeyValuePair.Create(currencyName, (object)"soft"));
     }
 
-    public async Task PremiumCurrencySpend()
+    public async Task PremiumCurrencySpend(int amount, string currencyName = "premium")
     {
-        await Capture("$c_PremiumCurrencySpend", new Dictionary<string, object>{
-            { "c_PremiumCurrencySpend", DateTime.UtcNow }
-        });
+        QuestEvent("$CurrencySpendEvent", amount, KeyValuePair.Create(currencyName, (object)"premium"));
     }
 
     public async Task AchievementComplete(string achievementName)
     {
-        await Capture(achievementName, new Dictionary<string, object>{
-            { achievementName, DateTime.UtcNow }
-        });
+        QuestEvent("$AchievementEvent", null, KeyValuePair.Create("achievementId", (object)achievementName));
+    }
+    
+    public async Task LevelEvent(int level)
+    {
+        QuestEvent("$LevelEvent", level, KeyValuePair.Create("playerLevel", (object)level));
     }
 
-    public async Task EventComplete(string eventName)
+    public async Task ScoreEvent(int score, string scoreType = "default")
     {
-        await Capture(eventName, new Dictionary<string, object>{
-            { eventName, DateTime.UtcNow }
-        });
+        QuestEvent("$ScoreEvent", score, KeyValuePair.Create("scoreType", (object)scoreType));        
     }
 
-    public async Task Level(int level)
+    public async Task QuestEvent(string eventName, int? value = null, params KeyValuePair<string, object>[] eventData)
     {
-        await Capture("c_Level", new Dictionary<string, object>{
-            { "c_Level", level }
-        });
-    }
+        var properties = new Dictionary<string, object>();
+        if (value != null)
+        {
+            properties["value"] = value;
+        }
 
-    public async Task Score(int score)
-    {
-        await Capture("c_Score", new Dictionary<string, object>{
-            { "c_Score", score }
-        });
+        if (eventData != null)
+        {
+            foreach (var data in eventData)
+            {
+                properties[data.Key] = data.Value;
+            }
+        }
+
+        await Capture(eventName, properties);
     }
 
     public string GenerateUserFingerprint() {
@@ -272,7 +281,6 @@ public class CatalystSDK : MonoBehaviour {
 
     // Automatic event tracking
     private void OnApplicationFocus(bool focus) {
-        Debug.Log("OnApplicationFocus " + focus);
         if (string.IsNullOrEmpty(_apiKey)) {
             Debug.LogWarning("The API key is not set in the Catalyst SDK. Please input the API key in the Catalyst SDK prefab.");
         } else if (focus) {
@@ -283,7 +291,6 @@ public class CatalystSDK : MonoBehaviour {
     }
 
     private void OnApplicationPause(bool pause) {
-        Debug.Log("OnApplicationPause " + pause);
         if (string.IsNullOrEmpty(_apiKey)) {
             Debug.LogWarning("The API key is not set in the Catalyst SDK. Please input the API key in the Catalyst SDK prefab.");
         } else if (pause) {
