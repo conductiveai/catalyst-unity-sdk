@@ -25,7 +25,7 @@ public class CatalystSDK : MonoBehaviour {
     [SerializeField] public string _apiKey = null;
     [SerializeField] public string sceneToShowButton = null;
     private string _apiUrl = "https://frame.conductive.ai";
-    private string _catalystURL = "https://catalyst-web-client.vercel.app/contest/";
+    private string _catalystURL = "https://catalyst-client.conductive.ai/contest/";
     private HttpClient _httpClient;
     private bool showToolbar = true;
     public CatalystAPIManager apiManager;
@@ -63,7 +63,7 @@ public class CatalystSDK : MonoBehaviour {
         _httpClient = new HttpClient();
         
         // Set your game's user id here to synchronize data with Catalyst services
-        //SetExternalId(YOUR_USER_ID);
+        SetExternalId(GenerateUserFingerprint());
         
         _distinctHash = Encode("{\"frame_api_token\":\"" + _apiKey + "\",\"fingerprint\":\"" + GenerateUserFingerprint() + "\",\"external_id\":\"" + _externalId + "\"}");
         Debug.Log("_distinctHash " + _distinctHash);
@@ -201,9 +201,9 @@ public class CatalystSDK : MonoBehaviour {
         QuestEvent("$AchievementEvent", null, KeyValuePair.Create("achievementId", (object)achievementName));
     }
     
-    public async Task LevelEvent(int level)
+    public async Task LevelEvent()
     {
-        QuestEvent("$LevelEvent", level, KeyValuePair.Create("playerLevel", (object)level));
+        QuestEvent("$LevelEvent", 1, KeyValuePair.Create("playerLevel", (object)1));
     }
 
     public async Task ScoreEvent(int score, string scoreType = "default")
