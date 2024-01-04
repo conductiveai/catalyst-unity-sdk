@@ -173,42 +173,42 @@ public class CatalystSDK : MonoBehaviour {
 
     public async Task UserPurchase(int userSpend, string itemPurchased = "default")
     {
-        QuestEvent("$UserPurchaseEvent", userSpend, KeyValuePair.Create("itemPurchased", (object)itemPurchased));
+        QuestEvent("$user_purchase", userSpend, KeyValuePair.Create("itemPurchased", (object)itemPurchased));
     }
 
     public async Task AdView(string id)
     {
-        QuestEvent("$AdViewEvent", null, KeyValuePair.Create("id", (object)id));
+        QuestEvent("$ad_view", null, KeyValuePair.Create("id", (object)id));
     }
 
     public async Task LootboxOpen(string lootboxType = "default", string reward = "default")
     {
-        QuestEvent("$LootboxEvent", null, KeyValuePair.Create(lootboxType, (object)reward));
+        QuestEvent("$lootbox", null, KeyValuePair.Create(lootboxType, (object)reward));
     }
 
     public async Task CurrencySpend(int amount, string currencyName = "default")
     {
-        QuestEvent("$CurrencySpendEvent", amount, KeyValuePair.Create(currencyName, (object)"soft"));
+        QuestEvent("$currency_spend", amount, KeyValuePair.Create(currencyName, (object)"soft"));
     }
 
     public async Task PremiumCurrencySpend(int amount, string currencyName = "premium")
     {
-        QuestEvent("$CurrencySpendEvent", amount, KeyValuePair.Create(currencyName, (object)"premium"));
+        QuestEvent("$currency_spend", amount, KeyValuePair.Create(currencyName, (object)"premium"));
     }
 
     public async Task AchievementComplete(string achievementName)
     {
-        QuestEvent("$AchievementEvent", null, KeyValuePair.Create("achievementId", (object)achievementName));
+        QuestEvent("$achievement", null, KeyValuePair.Create("achievementId", (object)achievementName));
     }
     
     public async Task LevelEvent()
     {
-        QuestEvent("$LevelEvent", 1, KeyValuePair.Create("playerLevel", (object)1));
+        QuestEvent("$level", 1, KeyValuePair.Create("playerLevel", (object)1));
     }
 
     public async Task ScoreEvent(int score, string scoreType = "default")
     {
-        QuestEvent("$ScoreEvent", score, KeyValuePair.Create("scoreType", (object)scoreType));        
+        QuestEvent("$score", score, KeyValuePair.Create("scoreType", (object)scoreType));        
     }
 
     public async Task QuestEvent(string eventName, int? value = null, params KeyValuePair<string, object>[] eventData)
@@ -301,19 +301,19 @@ public class CatalystSDK : MonoBehaviour {
     }
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode) {
-        Capture("Scene Loaded", new Dictionary<string, object>{
+        Capture("$scene_loaded", new Dictionary<string, object>{
             { "scene_loaded ", scene.name }
         });
     }
 
     private async Task TrackSessionStart() {
-        await Capture("Session Start", new Dictionary<string, object>{
+        await Capture("$session_start", new Dictionary<string, object>{
             { "session_start", DateTime.UtcNow }
         });
     }
 
     private async Task TrackSessionEnd() {
-        await Capture("Session End", new Dictionary<string, object>{
+        await Capture("$session_end", new Dictionary<string, object>{
             { "session_end", DateTime.UtcNow }
         });
     }
