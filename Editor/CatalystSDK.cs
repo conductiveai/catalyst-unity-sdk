@@ -24,7 +24,7 @@ public class CatalystSDK : MonoBehaviour {
 
     [SerializeField] public string _apiKey = null;
     [SerializeField] public string sceneToShowButton = null;
-    private string _apiUrl = "https://frame.conductive.ai";
+    private string _apiUrl = "https://event-router.qa-conductive.ai/ph";
     private string _catalystURL = "https://catalyst-client.conductive.ai/contest/";
     private HttpClient _httpClient;
     private bool showToolbar = true;
@@ -214,6 +214,9 @@ public class CatalystSDK : MonoBehaviour {
     public async Task QuestEvent(string eventName, int? value = null, params KeyValuePair<string, object>[] eventData)
     {
         var properties = new Dictionary<string, object>();
+        
+        properties ["quest_name"] = eventName;
+
         if (value != null)
         {
             properties["value"] = value;
@@ -227,7 +230,7 @@ public class CatalystSDK : MonoBehaviour {
             }
         }
 
-        await Capture(eventName, properties);
+        await Capture("$quest_event", properties);
     }
 
     public string GenerateUserFingerprint() {
