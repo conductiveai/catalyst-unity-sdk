@@ -173,42 +173,42 @@ public class CatalystSDK : MonoBehaviour {
 
     public async Task UserPurchase(int userSpend, string itemPurchased = "default")
     {
-        QuestEvent("$user_purchase", userSpend, KeyValuePair.Create("itemPurchased", (object)itemPurchased));
+        QuestEvent("$user_purchase", userSpend, new KeyValuePair<string, object>("itemPurchased", (object)itemPurchased));
     }
 
     public async Task AdView(string id)
     {
-        QuestEvent("$ad_view", null, KeyValuePair.Create("id", (object)id));
+        QuestEvent("$ad_view", null, new KeyValuePair<string, object>("id", (object)id));
     }
 
     public async Task LootboxOpen(string lootboxType = "default", string reward = "default")
     {
-        QuestEvent("$lootbox", null, KeyValuePair.Create(lootboxType, (object)reward));
+        QuestEvent("$lootbox", null, new KeyValuePair<string, object>(lootboxType, (object)reward));
     }
 
     public async Task CurrencySpend(int amount, string currencyName = "default")
     {
-        QuestEvent("$currency_spend", amount, KeyValuePair.Create(currencyName, (object)"soft"));
+        QuestEvent("$currency_spend", amount, new KeyValuePair<string, object>(currencyName, (object)"soft"));
     }
 
     public async Task PremiumCurrencySpend(int amount, string currencyName = "premium")
     {
-        QuestEvent("$currency_spend", amount, KeyValuePair.Create(currencyName, (object)"premium"));
+        QuestEvent("$currency_spend", amount, new KeyValuePair<string, object>(currencyName, (object)"premium"));
     }
 
     public async Task AchievementComplete(string achievementName)
     {
-        QuestEvent("$achievement", null, KeyValuePair.Create("achievementId", (object)achievementName));
+        QuestEvent("$achievement", null, new KeyValuePair<string, object>("achievementId", (object)achievementName));
     }
     
     public async Task LevelEvent()
     {
-        QuestEvent("$level", 1, KeyValuePair.Create("playerLevel", (object)1));
+        QuestEvent("$level", 1, new KeyValuePair<string, object>("playerLevel", (object)1));
     }
 
     public async Task ScoreEvent(int score, string scoreType = "default")
     {
-        QuestEvent("$score", score, KeyValuePair.Create("scoreType", (object)scoreType));        
+        QuestEvent("$score", score, new KeyValuePair<string, object>("scoreType", (object)scoreType));        
     }
 
     public async Task QuestEvent(string eventName, int? value = null, params KeyValuePair<string, object>[] eventData)
