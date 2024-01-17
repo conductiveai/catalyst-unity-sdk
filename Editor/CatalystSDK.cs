@@ -186,14 +186,14 @@ public class CatalystSDK : MonoBehaviour {
         QuestEvent("$lootbox", null, new KeyValuePair<string, object>(lootboxType, (object)reward));
     }
 
-    public async Task CurrencySpend(int amount, string currencyName = "default")
+    public async Task CurrencySpend(int amount)
     {
-        QuestEvent("$currency_spend", amount, new KeyValuePair<string, object>(currencyName, (object)"soft"));
+        QuestEvent("$currency_spend", amount, new KeyValuePair<string, object>("currencyType", (object)"soft"));
     }
 
-    public async Task PremiumCurrencySpend(int amount, string currencyName = "premium")
+    public async Task PremiumCurrencySpend(int amount)
     {
-        QuestEvent("$currency_spend", amount, new KeyValuePair<string, object>(currencyName, (object)"premium"));
+        QuestEvent("$currency_spend", amount, new KeyValuePair<string, object>("currencyType", (object)"premium"));
     }
 
     public async Task AchievementComplete(string achievementName)
