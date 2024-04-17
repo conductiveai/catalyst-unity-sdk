@@ -51,6 +51,14 @@ public class CatalystSDK : MonoBehaviour {
         10,  -1,  3, -52, -46, -45,   0,  10,
     };
 
+    private enum SessionStatus
+    {
+        SessionStart,
+        SessionEnd
+    }
+
+    private SessionStatus? lastSessionStatus;
+
     private void Awake() {
         if (s_instance != null) {
             Destroy(gameObject);
@@ -168,7 +176,12 @@ public class CatalystSDK : MonoBehaviour {
     public void OpenCatalyst() {
         StartCoroutine(apiManager.PostRewardSeen());
         apiManager.rewardBadge.SetActive(false);
-        ShowWebview(_catalystURL+_distinctHash);        
+        ShowWebview(_catalystURL+_distinctHash);    
+        ButtonClick();    
+    }
+
+    public async Task ButtonClick() {
+        await Capture("$sdk_btn_click", null);
     }
 
     public async Task UserPurchase(int userSpend, string itemPurchased = "default")
@@ -310,15 +323,21 @@ public class CatalystSDK : MonoBehaviour {
     }
 
     private async Task TrackSessionStart() {
+        if(lastSessionStatus != SessionStatus.SessionStart) {
+            lastSessionStatus = SessionStatus.SessionStart;
         await Capture("$session_start", new Dictionary<string, object>{
             { "session_start", DateTime.UtcNow }
         });
+        }
     }
 
     private async Task TrackSessionEnd() {
+        if(lastSessionStatus != SessionStatus.SessionEnd) {
+            lastSessionStatus = SessionStatus.SessionEnd;
         await Capture("$session_end", new Dictionary<string, object>{
             { "session_end", DateTime.UtcNow }
         });
+        }
     }
 
     private string GeneratePayload(string eventType, string eventName, object properties) {
