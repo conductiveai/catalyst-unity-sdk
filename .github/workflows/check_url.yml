@@ -1,0 +1,32 @@
+name: Check URL configuration
+
+on: 
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  check-file:
+    runs-on: ubuntu-latest
+
+    env:
+      FILE_PATH: "Editor/CatalystSDK.cs"
+      EXPECTED_API_URL: "https://event-router.conductive.ai/ph"
+      EXPECTED_CATALYST_URL: "https://catalyst-client.conductive.ai/contest/"
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Check file contents
+        id: check_file
+        run: |
+          if grep -q "private string _apiUrl = \"$EXPECTED_API_URL\";" $FILE_PATH && grep -q "private string _catalystURL = \"$EXPECTED_CATALYST_URL\";" $FILE_PATH; then
+            echo "Catalyst URL or Catalyst API url correctly set to production values"
+          else
+            echo "Catalyst URL or Catalyst API url are not set properly."
+            exit 1
+          fi
