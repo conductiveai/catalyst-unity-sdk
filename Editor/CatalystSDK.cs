@@ -24,7 +24,7 @@ public class CatalystSDK : MonoBehaviour {
 
     [SerializeField] public string _apiKey = null;
     [SerializeField] public string sceneToShowButton = null;
-    private string _apiUrl = "https://event-router.qa-conductive.ai/ph";
+    private string _apiUrl = "https://event-router.conductive.ai/ph";
     private string _catalystURL = "https://catalyst-client.conductive.ai/contest/";
     private HttpClient _httpClient;
     private bool showToolbar = true;
